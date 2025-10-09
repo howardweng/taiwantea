@@ -2,44 +2,71 @@
  * ProductCard - Displays a single tea product
  *
  * Features:
- * - Product image with alt text
+ * - Product image with alt text (click to view full-size)
  * - Product name, category, description
  * - Price formatting
  * - Stock status indicator
  * - Responsive design
  * - Accessibility (ARIA labels, semantic HTML)
+ * - Image modal for full-size viewing
  */
 
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ProductCard.module.css';
+import ImageModal from './ImageModal';
 
 function ProductCard({ product }) {
   const { id, name, category, description, price, imageUrl, thumbnailUrl, inStock } = product;
+  const [showModal, setShowModal] = useState(false);
 
-  // Use thumbnail if available, fallback to main image
+  // Use thumbnail for card display, full image for modal
   const displayImage = thumbnailUrl || imageUrl;
 
   // Format price to 2 decimal places
   const formattedPrice = `NT$${price.toFixed(2)}`;
 
+  const handleImageClick = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
-    <article
-      className={`${styles.card} ${!inStock ? styles.outOfStock : ''}`}
-      aria-label={`${name} - ${formattedPrice}`}
-    >
-      <div className={styles.imageContainer}>
-        <img
-          src={displayImage}
-          alt={name}
-          className={styles.image}
-          loading="lazy"
-        />
-        {!inStock && (
-          <div className={styles.stockBadge} aria-label="Out of stock">
-            Out of Stock
+    <>
+      <article
+        className={`${styles.card} ${!inStock ? styles.outOfStock : ''}`}
+        aria-label={`${name} - ${formattedPrice}`}
+      >
+        <div
+          className={styles.imageContainer}
+          onClick={handleImageClick}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              handleImageClick();
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label={`Click to view full-size image of ${name}`}
+        >
+          <img
+            src={displayImage}
+            alt={name}
+            className={styles.image}
+            loading="lazy"
+          />
+          <div className={styles.imageOverlay}>
+            <span className={styles.zoomIcon}>🔍</span>
           </div>
-        )}
-      </div>
+          {!inStock && (
+            <div className={styles.stockBadge} aria-label="Out of stock">
+              Out of Stock
+            </div>
+          )}
+        </div>
 
       <div className={styles.content}>
         <h3 className={styles.name}>{name}</h3>
@@ -66,7 +93,16 @@ function ProductCard({ product }) {
           )}
         </div>
       </div>
-    </article>
+      </article>
+
+      {showModal && (
+        <ImageModal
+          imageUrl={imageUrl}
+          alt={name}
+          onClose={handleCloseModal}
+        />
+      )}
+    </>
   );
 }
 
