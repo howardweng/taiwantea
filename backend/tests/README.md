@@ -55,20 +55,20 @@ While automated tests are being set up, you can test the API manually:
 
 ```bash
 # Test categories endpoint
-curl http://localhost:8000/api/categories
+curl http://localhost:8585/api/categories
 
 # Test products endpoint
-curl http://localhost:8000/api/products
+curl http://localhost:8585/api/products
 
 # Test with category filter
-curl "http://localhost:8000/api/products?category=green-tea"
+curl "http://localhost:8585/api/products?category=green-tea"
 
 # Test pagination
-curl "http://localhost:8000/api/products?limit=5&skip=0"
+curl "http://localhost:8585/api/products?limit=5&skip=0"
 ```
 
 ## API Documentation
 
 Interactive API documentation available at:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- Swagger UI: http://localhost:8585/docs
+- ReDoc: http://localhost:8585/redoc

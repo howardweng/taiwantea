@@ -38,8 +38,8 @@ docker-compose exec backend python -m src.scripts.seed_data
 Access the application:
 - **Frontend**: http://localhost:5173
 - **Admin Panel**: http://localhost:5173/admin
-- **API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
+- **API**: http://localhost:8585
+- **API Docs**: http://localhost:8585/docs
 
 ### Manual Setup
 
@@ -159,7 +159,7 @@ npm run format            # Prettier
 - **Task List**: `specs/001-i-wnat-to/tasks.md`
 - **Quickstart Guide**: `specs/001-i-wnat-to/quickstart.md`
 - **Website Overview (中文)**: `specs/001-i-wnat-to/website-overview-zh-TW.md`
-- **API Documentation**: http://localhost:8000/docs (when running)
+- **API Documentation**: http://localhost:8585/docs (when running)
 
 ## 🔧 Configuration
 
@@ -191,5 +191,5 @@ This project follows TDD (Test-Driven Development) approach. Please ensure:
 
 For issues or questions, refer to:
 1. Quickstart guide: `specs/001-i-wnat-to/quickstart.md`
-2. API documentation: http://localhost:8000/docs
+2. API documentation: http://localhost:8585/docs
 3. Check application logs for error details

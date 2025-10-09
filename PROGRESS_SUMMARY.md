@@ -62,7 +62,7 @@
 ### 運行中的服務
 ```
 ✅ MongoDB      - localhost:27017
-✅ 後端 API      - localhost:8000
+✅ 後端 API      - localhost:8585
 ✅ 前端網站      - localhost:5173
 ```
 
@@ -190,13 +190,13 @@ docker ps
 ### 4. 測試 API
 ```bash
 # 測試分類 API
-curl http://localhost:8000/api/categories
+curl http://localhost:8585/api/categories
 
 # 測試商品 API
-curl http://localhost:8000/api/products
+curl http://localhost:8585/api/products
 
 # 測試篩選
-curl "http://localhost:8000/api/products?category=green-tea"
+curl "http://localhost:8585/api/products?category=green-tea"
 ```
 
 ---

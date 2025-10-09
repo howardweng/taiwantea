@@ -62,7 +62,7 @@ cp frontend/.env.example frontend/.env
 
 Edit `frontend/.env`:
 ```env
-VITE_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:8585
 ```
 
 ### 3. Start All Services
@@ -73,7 +73,7 @@ docker-compose up -d
 
 This command starts:
 - MongoDB on port 27017
-- FastAPI backend on port 8000
+- FastAPI backend on port 8585
 - React frontend on port 5173
 
 ### 4. Seed Initial Data
@@ -91,8 +91,8 @@ Default admin credentials:
 
 - **Frontend**: http://localhost:5173
 - **Admin Panel**: http://localhost:5173/admin
-- **API Documentation**: http://localhost:8000/docs (Swagger UI)
-- **Alternative API Docs**: http://localhost:8000/redoc (ReDoc)
+- **API Documentation**: http://localhost:8585/docs (Swagger UI)
+- **Alternative API Docs**: http://localhost:8585/redoc (ReDoc)
 
 ### 6. Stop Services
 
@@ -149,10 +149,10 @@ cp .env.example .env
 python -m src.scripts.seed_data
 
 # Start development server
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8585
 ```
 
-Backend will be available at http://localhost:8000
+Backend will be available at http://localhost:8585
 
 ### 3. Set Up Frontend
 
@@ -181,7 +181,7 @@ Frontend will be available at http://localhost:5173
 ### 1. Check API Health
 
 ```bash
-curl http://localhost:8000/api/health
+curl http://localhost:8585/api/health
 ```
 
 Expected response:
@@ -200,18 +200,18 @@ Expected response:
 
 **Get Categories**:
 ```bash
-curl http://localhost:8000/api/categories
+curl http://localhost:8585/api/categories
 ```
 
 **Get Products**:
 ```bash
-curl http://localhost:8000/api/products
+curl http://localhost:8585/api/products
 ```
 
 ### 3. Test Admin Login
 
 ```bash
-curl -X POST http://localhost:8000/api/auth/login \
+curl -X POST http://localhost:8585/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@taiwantea.com","password":"Admin123!"}'
 ```
@@ -250,19 +250,19 @@ Navigate to http://localhost:5173 in your browser. You should see:
 
 ```bash
 # First, login to get auth token
-curl -X POST http://localhost:8000/api/auth/login \
+curl -X POST http://localhost:8585/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@taiwantea.com","password":"Admin123!"}' \
   -c cookies.txt
 
 # Upload image
-curl -X POST http://localhost:8000/api/admin/upload \
+curl -X POST http://localhost:8585/api/admin/upload \
   -H "Content-Type: multipart/form-data" \
   -F "image=@/path/to/tea-image.jpg" \
   -b cookies.txt
 
 # Use returned imageUrl in product creation
-curl -X POST http://localhost:8000/api/admin/products \
+curl -X POST http://localhost:8585/api/admin/products \
   -H "Content-Type: application/json" \
   -b cookies.txt \
   -d '{
@@ -373,7 +373,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/) format.
 
 ### CORS Error in Browser
 
-**Error**: `Access to fetch at 'http://localhost:8000' from origin 'http://localhost:5173' has been blocked by CORS policy`
+**Error**: `Access to fetch at 'http://localhost:8585' from origin 'http://localhost:5173' has been blocked by CORS policy`
 
 **Solution**:
 1. Verify `ALLOWED_ORIGINS` in `backend/.env` includes `http://localhost:5173`
@@ -404,7 +404,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/) format.
 **Solution**:
 ```bash
 # Find process using port
-lsof -i :8000    # Backend port
+lsof -i :8585    # Backend port
 lsof -i :5173    # Frontend port
 
 # Kill process
@@ -427,7 +427,7 @@ Once the application is running:
 
 ## Additional Resources
 
-- **API Documentation**: http://localhost:8000/docs
+- **API Documentation**: http://localhost:8585/docs
 - **React DevTools**: [Chrome Extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
 - **MongoDB Compass**: [Download](https://www.mongodb.com/products/compass) for database GUI
 - **FastAPI Docs**: https://fastapi.tiangolo.com/
@@ -439,6 +439,6 @@ Once the application is running:
 
 For issues or questions:
 1. Check this quickstart guide
-2. Review API documentation at http://localhost:8000/docs
+2. Review API documentation at http://localhost:8585/docs
 3. Check application logs for error details
 4. Contact the development team

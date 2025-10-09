@@ -287,7 +287,7 @@ describe('ProductCard', () => {
 
 #### Health Check
 ```bash
-curl http://localhost:8000/api/health
+curl http://localhost:8585/api/health
 ```
 
 **Expected Response:**
@@ -304,7 +304,7 @@ curl http://localhost:8000/api/health
 
 #### Get Categories
 ```bash
-curl http://localhost:8000/api/categories
+curl http://localhost:8585/api/categories
 ```
 
 **Expected Response:**
@@ -326,7 +326,7 @@ curl http://localhost:8000/api/categories
 
 #### Get Products
 ```bash
-curl http://localhost:8000/api/products
+curl http://localhost:8585/api/products
 ```
 
 **Expected Response:**
@@ -352,17 +352,17 @@ curl http://localhost:8000/api/products
 
 #### Filter by Category
 ```bash
-curl "http://localhost:8000/api/products?category=green-tea"
+curl "http://localhost:8585/api/products?category=green-tea"
 ```
 
 #### Pagination
 ```bash
-curl "http://localhost:8000/api/products?limit=5&skip=0"
+curl "http://localhost:8585/api/products?limit=5&skip=0"
 ```
 
 #### Admin Login
 ```bash
-curl -X POST http://localhost:8000/api/auth/login \
+curl -X POST http://localhost:8585/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@taiwantea.com",

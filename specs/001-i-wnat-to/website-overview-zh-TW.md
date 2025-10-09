@@ -268,8 +268,8 @@ docker-compose up
 
 → 前台：http://localhost:5173
 → 後台：http://localhost:5173/admin
-→ API：http://localhost:8000
-→ API 文檔：http://localhost:8000/docs
+→ API：http://localhost:8585
+→ API 文檔：http://localhost:8585/docs
 ```
 
 ### 測試驅動開發 (TDD)

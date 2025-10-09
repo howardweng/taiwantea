@@ -44,7 +44,7 @@
 4. Mock database for unit tests
 
 **Workaround**: Manual testing via:
-- API Documentation: http://localhost:8000/docs
+- API Documentation: http://localhost:8585/docs
 - cURL commands
 - Postman/Insomnia
 
@@ -64,19 +64,19 @@
 #### Backend API Testing
 ```bash
 # Test categories
-curl http://localhost:8000/api/categories
+curl http://localhost:8585/api/categories
 
 # Test products
-curl http://localhost:8000/api/products
+curl http://localhost:8585/api/products
 
 # Test filtering
-curl "http://localhost:8000/api/products?category=green-tea"
+curl "http://localhost:8585/api/products?category=green-tea"
 
 # Test pagination
-curl "http://localhost:8000/api/products?limit=5&skip=0"
+curl "http://localhost:8585/api/products?limit=5&skip=0"
 
 # Test single product
-curl http://localhost:8000/api/products/{product_id}
+curl http://localhost:8585/api/products/{product_id}
 ```
 
 #### Frontend Testing

@@ -374,7 +374,7 @@ If you encounter issues:
 2. Verify all dependencies are installed
 3. Ensure MongoDB is running
 4. Check environment variables in `.env` files
-5. Review API docs at http://localhost:8000/docs
+5. Review API docs at http://localhost:8585/docs
 
 ## 📝 Notes
 

@@ -16,7 +16,9 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 async def seed_database():
     """Seed initial data into MongoDB"""
 
-    mongodb_url = os.getenv("MONGODB_URL", "mongodb://localhost:27017/taiwantea")
+    mongodb_url = os.getenv("MONGODB_URL")
+    if not mongodb_url:
+        raise ValueError("MONGODB_URL environment variable is required")
     client = AsyncIOMotorClient(mongodb_url, serverSelectionTimeoutMS=5000)
 
     # Extract database name from URL

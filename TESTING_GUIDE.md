@@ -134,34 +134,34 @@ Test files mentioned in plan but not created:
 
 **1. Health Check:**
 ```bash
-curl http://localhost:8000/api/health
+curl http://localhost:8585/api/health
 ```
 
 **2. Get Categories:**
 ```bash
-curl http://localhost:8000/api/categories
+curl http://localhost:8585/api/categories
 ```
 
 **3. Get Products:**
 ```bash
-curl http://localhost:8000/api/products
+curl http://localhost:8585/api/products
 ```
 
 **4. Filter by Category:**
 ```bash
-curl http://localhost:8000/api/products?category=green-tea
+curl http://localhost:8585/api/products?category=green-tea
 ```
 
 **5. Admin Login:**
 ```bash
-curl -X POST http://localhost:8000/api/auth/login \
+curl -X POST http://localhost:8585/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@taiwantea.com","password":"admin123"}'
 ```
 
 **6. Create Product (requires auth):**
 ```bash
-curl -X POST http://localhost:8000/api/admin/products \
+curl -X POST http://localhost:8585/api/admin/products \
   -H "Content-Type: application/json" \
   -H "Cookie: access_token=YOUR_TOKEN" \
   -d '{

@@ -293,7 +293,7 @@ MAX_FILE_SIZE=5242880  # 5MB
 
 ### Frontend (.env)
 ```bash
-VITE_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:8585
 ```
 
 ---
@@ -478,8 +478,8 @@ Monitor `/api/health` endpoint for:
 ## Support & Documentation
 
 ### API Documentation
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+- **Swagger UI**: http://localhost:8585/docs
+- **ReDoc**: http://localhost:8585/redoc
 
 ### Troubleshooting
 1. **Cannot login**: Check admin exists in database

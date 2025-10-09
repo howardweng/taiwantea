@@ -7,8 +7,8 @@ from typing import List
 class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
 
-    # Database
-    MONGODB_URL: str = "mongodb://localhost:27017/taiwantea"
+    # Database (Remote MongoDB - required)
+    MONGODB_URL: str  # No default - must be provided via environment variable
     DATABASE_NAME: str = "taiwantea"
 
     # Security
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # API
-    API_URL: str = "http://localhost:8000"
+    API_URL: str = "http://localhost:8585"
 
     # CORS
     ALLOWED_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"

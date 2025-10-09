@@ -48,8 +48,8 @@ docker-compose exec backend python -m src.scripts.seed_data
 
 **Access**:
 - Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+- Backend API: http://localhost:8585
+- API Docs: http://localhost:8585/docs
 
 ### Option 2: Manual Setup
 
@@ -84,7 +84,7 @@ npm install
 
 # Copy and edit .env
 cp .env.example .env
-# Edit .env: Set VITE_API_URL=http://localhost:8000
+# Edit .env: Set VITE_API_URL=http://localhost:8585
 
 # Start dev server
 npm run dev
@@ -98,7 +98,7 @@ Once running, you can test the backend authentication:
 
 ### Using API Docs (Swagger UI)
 
-1. Go to http://localhost:8000/docs
+1. Go to http://localhost:8585/docs
 2. Click on `POST /api/auth/login`
 3. Click "Try it out"
 4. Enter credentials:
@@ -115,16 +115,16 @@ Once running, you can test the backend authentication:
 
 ```bash
 # Login
-curl -X POST http://localhost:8000/api/auth/login \
+curl -X POST http://localhost:8585/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@taiwantea.com","password":"Admin123!"}' \
   -c cookies.txt
 
 # Get current user (using saved cookies)
-curl http://localhost:8000/api/auth/me -b cookies.txt
+curl http://localhost:8585/api/auth/me -b cookies.txt
 
 # Logout
-curl -X POST http://localhost:8000/api/auth/logout -b cookies.txt
+curl -X POST http://localhost:8585/api/auth/logout -b cookies.txt
 ```
 
 ### Check Seeded Data
@@ -316,7 +316,7 @@ npm run build
 
 3. **Test as you go**: Don't wait until all tasks are done
 
-4. **Use the API docs**: http://localhost:8000/docs is your friend
+4. **Use the API docs**: http://localhost:8585/docs is your friend
 
 5. **Parallel tasks ([P])**: Can be done simultaneously by multiple developers
 
