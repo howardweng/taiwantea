@@ -1,0 +1,152 @@
+/**
+ * HomePage Styles
+ *
+ * Layout and styling for the main customer page
+ */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background);
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--color-white);
+  padding: var(--spacing-3xl) var(--spacing-lg);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.headerContent {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  margin: 0 0 var(--spacing-md);
+  font-family: var(--font-heading);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: var(--font-size-xl);
+  margin: 0 0 var(--spacing-md);
+  opacity: 0.95;
+  font-weight: 300;
+}
+
+.description {
+  font-size: var(--font-size-base);
+  margin: 0;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Footer */
+.footer {
+  background: var(--color-gray-800);
+  color: var(--color-white);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  text-align: center;
+  margin-top: auto;
+}
+
+.footerContent {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.footer p {
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  opacity: 0.8;
+}
+
+.footerLinks {
+  margin-top: var(--spacing-md);
+}
+
+.footerLinks a {
+  color: var(--color-white);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.footerLinks a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .header {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .header {
+    padding: var(--spacing-xl) var(--spacing-sm);
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-base);
+  }
+
+  .footer {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .header {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .header {
+    background: white;
+    color: black;
+    padding: var(--spacing-md);
+  }
+
+  .footer {
+    background: white;
+    color: black;
+  }
+}

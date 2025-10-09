@@ -1,0 +1,760 @@
+openapi: 3.0.3
+info:
+  title: Tea Leaves E-Commerce API
+  description: RESTful API for tea product catalog and admin content management
+  version: 1.0.0
+  contact:
+    name: TAIWANTEA
+    email: admin@taiwantea.com
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.taiwantea.com
+    description: Production server
+
+tags:
+  - name: Products (Public)
+    description: Public-facing product catalog endpoints
+  - name: Categories (Public)
+    description: Public-facing category endpoints
+  - name: Authentication
+    description: Admin authentication endpoints
+  - name: Admin - Products
+    description: Admin product management endpoints
+  - name: Admin - Images
+    description: Admin image upload endpoints
+
+paths:
+  # ============================================
+  # PUBLIC ENDPOINTS
+  # ============================================
+
+  /api/products:
+    get:
+      tags:
+        - Products (Public)
+      summary: List all products
+      description: Retrieve all in-stock products, optionally filtered by category
+      parameters:
+        - name: category
+          in: query
+          description: Filter by category ID
+          required: false
+          schema:
+            type: string
+            example: green-tea
+        - name: sort
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum: [displayOrder, createdAt, price]
+            default: displayOrder
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  message:
+                    type: string
+                    example: Products retrieved successfully
+
+  /api/products/{productId}:
+    get:
+      tags:
+        - Products (Public)
+      summary: Get single product
+      description: Retrieve detailed information for a specific product
+      parameters:
+        - name: productId
+          in: path
+          description: Product ID (MongoDB ObjectId)
+          required: true
+          schema:
+            type: string
+            example: 507f1f77bcf86cd799439011
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Product'
+                  message:
+                    type: string
+                    example: Product retrieved successfully
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/categories:
+    get:
+      tags:
+        - Categories (Public)
+      summary: List all active categories
+      description: Retrieve all active tea categories sorted by display order
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+                  message:
+                    type: string
+                    example: Categories retrieved successfully
+
+  # ============================================
+  # AUTHENTICATION ENDPOINTS
+  # ============================================
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Admin login
+      description: Authenticate admin user and receive JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@taiwantea.com
+                password:
+                  type: string
+                  format: password
+                  example: SecureP@ssw0rd
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              description: httpOnly cookie with JWT token
+              schema:
+                type: string
+                example: accessToken=eyJhbGc...; HttpOnly; Secure; SameSite=Strict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      admin:
+                        $ref: '#/components/schemas/AdminProfile'
+                  message:
+                    type: string
+                    example: Login successful
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Admin logout
+      description: Invalidate JWT token and clear cookie
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Logout successful
+
+  /api/auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current admin profile
+      description: Retrieve authenticated admin's profile information
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AdminProfile'
+                  message:
+                    type: string
+                    example: Profile retrieved successfully
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ============================================
+  # ADMIN PRODUCT MANAGEMENT ENDPOINTS
+  # ============================================
+
+  /api/admin/products:
+    get:
+      tags:
+        - Admin - Products
+      summary: List all products (admin view)
+      description: Retrieve all products including out-of-stock items
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ProductAdmin'
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            example: 1
+                          limit:
+                            type: integer
+                            example: 50
+                          total:
+                            type: integer
+                            example: 87
+                          pages:
+                            type: integer
+                            example: 2
+                  message:
+                    type: string
+                    example: Products retrieved successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags:
+        - Admin - Products
+      summary: Create new product
+      description: Add a new tea product to the catalog
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequest'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/ProductAdmin'
+                  message:
+                    type: string
+                    example: Product created successfully
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/admin/products/{productId}:
+    get:
+      tags:
+        - Admin - Products
+      summary: Get single product (admin view)
+      description: Retrieve detailed product information for editing
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+            example: 507f1f77bcf86cd799439011
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/ProductAdmin'
+                  message:
+                    type: string
+                    example: Product retrieved successfully
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Admin - Products
+      summary: Update product
+      description: Update an existing product's information
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+            example: 507f1f77bcf86cd799439011
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateRequest'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/ProductAdmin'
+                  message:
+                    type: string
+                    example: Product updated successfully
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Admin - Products
+      summary: Delete product
+      description: Remove a product from the catalog
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+            example: 507f1f77bcf86cd799439011
+      responses:
+        '200':
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product deleted successfully
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ============================================
+  # ADMIN IMAGE UPLOAD ENDPOINTS
+  # ============================================
+
+  /api/admin/upload:
+    post:
+      tags:
+        - Admin - Images
+      summary: Upload product image
+      description: Upload and process a product image (resize, convert to WebP)
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Image file (JPG, PNG, WebP, max 5MB)
+      responses:
+        '200':
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        example: /uploads/products/dragon-well-001.webp
+                      thumbnailUrl:
+                        type: string
+                        example: /uploads/products/thumbs/dragon-well-001.webp
+                  message:
+                    type: string
+                    example: Image uploaded successfully
+        '400':
+          description: Invalid file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: File too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+# ============================================
+# COMPONENTS
+# ============================================
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 507f1f77bcf86cd799439011
+        name:
+          type: string
+          example: Dragon Well Green Tea
+        category:
+          type: string
+          example: green-tea
+        description:
+          type: string
+          example: Premium Dragon Well (Longjing) green tea from Hangzhou, China...
+        price:
+          type: number
+          format: decimal
+          example: 24.99
+        imageUrl:
+          type: string
+          example: /uploads/products/dragon-well-001.webp
+        thumbnailUrl:
+          type: string
+          example: /uploads/products/thumbs/dragon-well-001.webp
+        inStock:
+          type: boolean
+          example: true
+
+    ProductAdmin:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+        - type: object
+          properties:
+            displayOrder:
+              type: integer
+              example: 1
+            createdAt:
+              type: string
+              format: date-time
+              example: 2025-10-08T12:00:00Z
+            updatedAt:
+              type: string
+              format: date-time
+              example: 2025-10-08T12:00:00Z
+            createdBy:
+              type: string
+              example: 507f1f77bcf86cd799439012
+
+    ProductCreateRequest:
+      type: object
+      required:
+        - name
+        - category
+        - description
+        - price
+        - imageUrl
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          example: Dragon Well Green Tea
+        category:
+          type: string
+          example: green-tea
+        description:
+          type: string
+          minLength: 10
+          maxLength: 5000
+          example: Premium Dragon Well green tea...
+        price:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 24.99
+        imageUrl:
+          type: string
+          example: /uploads/products/dragon-well-001.webp
+        thumbnailUrl:
+          type: string
+          example: /uploads/products/thumbs/dragon-well-001.webp
+        inStock:
+          type: boolean
+          default: true
+          example: true
+        displayOrder:
+          type: integer
+          minimum: 0
+          default: 999
+          example: 1
+
+    ProductUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          example: Dragon Well Green Tea
+        category:
+          type: string
+          example: green-tea
+        description:
+          type: string
+          minLength: 10
+          maxLength: 5000
+          example: Premium Dragon Well green tea...
+        price:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 24.99
+        imageUrl:
+          type: string
+          example: /uploads/products/dragon-well-001.webp
+        thumbnailUrl:
+          type: string
+          example: /uploads/products/thumbs/dragon-well-001.webp
+        inStock:
+          type: boolean
+          example: true
+        displayOrder:
+          type: integer
+          minimum: 0
+          example: 1
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          example: green-tea
+        name:
+          type: string
+          example: Green Tea
+        description:
+          type: string
+          example: Fresh, delicate green teas from China and Japan...
+        displayOrder:
+          type: integer
+          example: 1
+        imageUrl:
+          type: string
+          example: /uploads/categories/green-tea-banner.webp
+
+    AdminProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 507f1f77bcf86cd799439012
+        email:
+          type: string
+          format: email
+          example: admin@taiwantea.com
+        name:
+          type: string
+          example: Tea Admin
+        lastLoginAt:
+          type: string
+          format: date-time
+          example: 2025-10-08T14:30:00Z
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+              enum:
+                - VALIDATION_ERROR
+                - UNAUTHORIZED
+                - FORBIDDEN
+                - NOT_FOUND
+                - INTERNAL_ERROR
+                - FILE_TOO_LARGE
+                - INVALID_FILE_TYPE
+            message:
+              type: string
+              example: Invalid input data
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: price
+                  message:
+                    type: string
+                    example: Price must be a positive number

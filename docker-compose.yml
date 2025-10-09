@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: taiwantea-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=taiwantea
+    networks:
+      - taiwantea-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taiwantea-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./backend/uploads:/app/uploads
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017/taiwantea
+      - SECRET_KEY=your-secret-key-change-in-production
+      - ALLOWED_ORIGINS=http://localhost:5173
+    depends_on:
+      - mongodb
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - taiwantea-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taiwantea-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    command: npm run dev -- --host
+    networks:
+      - taiwantea-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  taiwantea-network:
+    driver: bridge

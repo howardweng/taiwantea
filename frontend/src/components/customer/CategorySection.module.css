@@ -1,0 +1,156 @@
+/**
+ * CategorySection Styles
+ *
+ * Responsive section layout for category-grouped products
+ */
+
+.section {
+  padding: var(--spacing-2xl) 0;
+  scroll-margin-top: 80px; /* Offset for sticky navigation */
+}
+
+.section:not(:last-child) {
+  border-bottom: 2px solid var(--color-border);
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.headerImageContainer {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: var(--border-radius-lg);
+  background: var(--color-gray-100);
+}
+
+.headerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.headerContent {
+  text-align: center;
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md);
+  font-family: var(--font-heading);
+}
+
+.description {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Product Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+}
+
+/* Empty State */
+.empty {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+/* Responsive Design */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .description {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .section {
+    padding: var(--spacing-xl) 0;
+    scroll-margin-top: 60px;
+  }
+
+  .header {
+    margin-bottom: var(--spacing-xl);
+    gap: var(--spacing-md);
+  }
+
+  .headerImageContainer {
+    height: 150px;
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .description {
+    font-size: var(--font-size-base);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .empty {
+    padding: var(--spacing-xl);
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .section {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .headerImageContainer {
+    height: 120px;
+  }
+
+  .grid {
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    scroll-margin-top: 0;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .section {
+    page-break-inside: avoid;
+  }
+
+  .headerImageContainer {
+    display: none; /* Save ink */
+  }
+}

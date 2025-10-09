@@ -1,0 +1,191 @@
+/**
+ * CategoryForm Component
+ *
+ * Form for creating/editing categories
+ */
+
+import { useState, useEffect } from 'react';
+import styles from './CategoryForm.module.css';
+
+function CategoryForm({ category, onSubmit, onCancel }) {
+  const [formData, setFormData] = useState({
+    id: '',
+    name: '',
+    description: '',
+    displayOrder: 999,
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+
+  // Initialize form with category data if editing
+  useEffect(() => {
+    if (category) {
+      setFormData({
+        id: category.id || '',
+        name: category.name || '',
+        description: category.description || '',
+        displayOrder: category.displayOrder || 999,
+      });
+    }
+  }, [category]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'displayOrder' ? parseInt(value) || 0 : value,
+    }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!category) {
+      // ID is required for new categories
+      if (!formData.id.trim()) {
+        newErrors.id = 'Category ID is required';
+      } else if (!/^[a-z0-9-]+$/.test(formData.id)) {
+        newErrors.id = 'ID must be lowercase alphanumeric with hyphens only';
+      }
+    }
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Category name is required';
+    }
+
+    if (!formData.description.trim() || formData.description.length < 10) {
+      newErrors.description = 'Description must be at least 10 characters';
+    }
+
+    if (formData.displayOrder < 0) {
+      newErrors.displayOrder = 'Display order must be 0 or greater';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validate()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      // For editing, don't send the ID field
+      const submitData = category
+        ? { name: formData.name, description: formData.description, displayOrder: formData.displayOrder }
+        : formData;
+
+      await onSubmit(submitData);
+    } catch (error) {
+      console.error('Failed to save category:', error);
+      setSubmitError(error.response?.data?.detail || error.message || 'Failed to save category');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className={styles.formContainer}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <h2 className={styles.formTitle}>{category ? 'Edit Category' : 'Add New Category'}</h2>
+
+        {submitError && <div className={styles.errorMessage}>{submitError}</div>}
+
+        <div className={styles.formGroup}>
+          <label htmlFor="id" className={styles.label}>
+            Category ID *
+          </label>
+          <input
+            type="text"
+            id="id"
+            name="id"
+            value={formData.id}
+            onChange={handleChange}
+            disabled={!!category || isSubmitting}
+            className={`${styles.input} ${errors.id ? styles.inputError : ''}`}
+            placeholder="e.g., green, black, oolong"
+          />
+          {errors.id && <span className={styles.fieldError}>{errors.id}</span>}
+          {!category && (
+            <small className={styles.helpText}>
+              Use lowercase letters, numbers, and hyphens only. This cannot be changed later.
+            </small>
+          )}
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="name" className={styles.label}>
+            Category Name *
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+            placeholder="e.g., Green Tea"
+          />
+          {errors.name && <span className={styles.fieldError}>{errors.name}</span>}
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="description" className={styles.label}>
+            Description *
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            className={`${styles.textarea} ${errors.description ? styles.inputError : ''}`}
+            placeholder="Describe this tea category..."
+          />
+          {errors.description && <span className={styles.fieldError}>{errors.description}</span>}
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="displayOrder" className={styles.label}>
+            Display Order
+          </label>
+          <input
+            type="number"
+            id="displayOrder"
+            name="displayOrder"
+            value={formData.displayOrder}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            min="0"
+            className={`${styles.input} ${errors.displayOrder ? styles.inputError : ''}`}
+          />
+          {errors.displayOrder && <span className={styles.fieldError}>{errors.displayOrder}</span>}
+          <small className={styles.helpText}>Categories are sorted by this number (0 = first)</small>
+        </div>
+
+        <div className={styles.formActions}>
+          <button type="button" onClick={onCancel} className={styles.cancelButton} disabled={isSubmitting}>
+            Cancel
+          </button>
+          <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : category ? 'Update Category' : 'Create Category'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default CategoryForm;
