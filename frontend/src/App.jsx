@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/admin/LoginPage';
 import DashboardPage from './pages/admin/DashboardPage';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { useAuth } from './hooks/useAuth.jsx';
 import './styles/variables.css';
 
@@ -18,22 +19,24 @@ function ProtectedRoute({ children }) {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/admin/login" element={<LoginPage />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Redirect /admin to dashboard */}
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/admin/login" element={<LoginPage />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Redirect /admin to dashboard */}
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

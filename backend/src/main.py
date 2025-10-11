@@ -10,6 +10,8 @@ from src.config import settings
 from src.database import connect_to_mongo, close_mongo_connection
 from src.routers import auth, products, admin_products, admin_categories, upload
 from src.logger import logger
+from src.middleware.logging import add_logging_middleware
+from src.middleware.rate_limit import add_rate_limiting
 
 
 @asynccontextmanager
@@ -42,6 +44,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add request logging middleware
+add_logging_middleware(app)
+
+# Add rate limiting for admin endpoints (100 requests per minute)
+add_rate_limiting(app, requests_per_minute=100)
 
 
 # Global exception handler
