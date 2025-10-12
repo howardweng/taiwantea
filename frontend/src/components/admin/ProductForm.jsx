@@ -111,7 +111,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
     <div className={styles.formContainer}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <h2 className={styles.formTitle}>
-          {product ? 'Edit Product' : 'Add New Product'}
+          {product ? '編輯商品' : '新增商品'}
         </h2>
 
         {errors.submit && (
@@ -122,7 +122,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
 
         <div className={styles.formGroup}>
           <label htmlFor="name" className={styles.label}>
-            Product Name *
+            商品名稱 *
           </label>
           <input
             type="text"
@@ -138,7 +138,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
 
         <div className={styles.formGroup}>
           <label htmlFor="category" className={styles.label}>
-            Category *
+            商品分類 *
           </label>
           <select
             id="category"
@@ -148,7 +148,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
             className={`${styles.select} ${errors.category ? styles.inputError : ''}`}
             disabled={isSubmitting}
           >
-            <option value="">Select a category</option>
+            <option value="">請選擇分類</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -160,7 +160,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
 
         <div className={styles.formGroup}>
           <label htmlFor="description" className={styles.label}>
-            Description *
+            商品描述 *
           </label>
           <textarea
             id="description"
@@ -177,7 +177,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="price" className={styles.label}>
-              Price (NT$) *
+              價格 (NT$) *
             </label>
             <input
               type="number"
@@ -195,7 +195,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
 
           <div className={styles.formGroup}>
             <label htmlFor="displayOrder" className={styles.label}>
-              Display Order
+              顯示順序
             </label>
             <input
               type="number"
@@ -212,27 +212,28 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
 
         <div className={styles.formGroup}>
           <label htmlFor="badge" className={styles.label}>
-            Badge Text (Optional)
+            標籤 (選填)
           </label>
-          <input
-            type="text"
+          <select
             id="badge"
             name="badge"
-            value={formData.badge}
+            value={formData.badge || ''}
             onChange={handleChange}
-            maxLength={20}
-            placeholder="e.g., HOT, NEW, SALE (leave empty for no badge)"
-            className={styles.input}
+            className={styles.select}
             disabled={isSubmitting}
-          />
+          >
+            <option value="">無標籤</option>
+            <option value="HOT">HOT 熱門</option>
+            <option value="NEW">NEW 新品</option>
+            <option value="SALE">SALE 特價</option>
+          </select>
           <span className={styles.helpText}>
-            Optional badge to display on product card (max 20 characters).
-            Common badges: HOT, NEW, SALE, 熱銷, 特價
+            選擇要在商品卡片上顯示的標籤
           </span>
         </div>
 
         <ImageUpload
-          label="Product Image *"
+          label="商品圖片 *"
           value={formData.imageUrl}
           onChange={(url) => {
             setFormData((prev) => ({ ...prev, imageUrl: url }));
@@ -243,11 +244,11 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
           onThumbnailChange={(thumbUrl) => {
             setFormData((prev) => ({ ...prev, thumbnailUrl: thumbUrl }));
           }}
-          placeholder="Upload product image (thumbnail will be generated automatically)"
+          placeholder="上傳商品圖片 (縮圖將自動生成)"
         />
         {errors.imageUrl && <span className={styles.fieldError}>{errors.imageUrl}</span>}
         {formData.thumbnailUrl && (
-          <p className={styles.helpText}>✓ Thumbnail generated automatically</p>
+          <p className={styles.helpText}>✓ 縮圖已自動生成</p>
         )}
 
         <div className={styles.formGroup}>
@@ -260,7 +261,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
               className={styles.checkbox}
               disabled={isSubmitting}
             />
-            <span>In Stock</span>
+            <span>有庫存</span>
           </label>
         </div>
 
@@ -271,10 +272,10 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
             className={styles.cancelButton}
             disabled={isSubmitting}
           >
-            Cancel
+            取消
           </button>
           <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : product ? 'Update Product' : 'Create Product'}
+            {isSubmitting ? '儲存中...' : product ? '更新商品' : '建立商品'}
           </button>
         </div>
       </form>

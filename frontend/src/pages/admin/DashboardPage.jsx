@@ -11,6 +11,8 @@ import { useToast } from '../../components/common/ToastContainer.jsx';
 import useProducts from '../../hooks/useProducts';
 import ProductForm from '../../components/admin/ProductForm';
 import CategoryForm from '../../components/admin/CategoryForm';
+import CarouselManager from '../../components/admin/CarouselManager';
+import IntroSectionEditor from '../../components/admin/IntroSectionEditor';
 import { createProduct, updateProduct, deleteProduct } from '../../services/adminProductService';
 import { createCategory, updateCategory, deleteCategory } from '../../services/adminCategoryService';
 import styles from './DashboardPage.module.css';
@@ -43,17 +45,17 @@ function DashboardPage() {
   };
 
   const handleDeleteProduct = async (productId) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) {
+    if (!window.confirm('確定要刪除此商品嗎？')) {
       return;
     }
 
     try {
       await deleteProduct(productId);
-      toast.success('Product deleted successfully');
+      toast.success('商品已成功刪除');
       refetch(); // Refresh product list
     } catch (error) {
       console.error('Failed to delete product:', error);
-      toast.error('Failed to delete product. Please try again.');
+      toast.error('刪除商品失敗，請重試。');
     }
   };
 
@@ -61,10 +63,10 @@ function DashboardPage() {
     try {
       if (editingProduct) {
         await updateProduct(editingProduct.id, formData);
-        toast.success('Product updated successfully');
+        toast.success('商品已成功更新');
       } else {
         await createProduct(formData);
-        toast.success('Product created successfully');
+        toast.success('商品已成功建立');
       }
       setShowForm(false);
       setEditingProduct(null);
@@ -91,17 +93,17 @@ function DashboardPage() {
   };
 
   const handleDeleteCategory = async (categoryId) => {
-    if (!window.confirm('Are you sure you want to delete this category?')) {
+    if (!window.confirm('確定要刪除此分類嗎？')) {
       return;
     }
 
     try {
       await deleteCategory(categoryId);
-      toast.success('Category deleted successfully');
+      toast.success('分類已成功刪除');
       refetch(); // Refresh categories list
     } catch (error) {
       console.error('Failed to delete category:', error);
-      toast.error('Failed to delete category. Please try again.');
+      toast.error('刪除分類失敗，請重試。');
     }
   };
 
@@ -109,10 +111,10 @@ function DashboardPage() {
     try {
       if (editingCategory) {
         await updateCategory(editingCategory.id, formData);
-        toast.success('Category updated successfully');
+        toast.success('分類已成功更新');
       } else {
         await createCategory(formData);
-        toast.success('Category created successfully');
+        toast.success('分類已成功建立');
       }
       setShowCategoryForm(false);
       setEditingCategory(null);
@@ -143,7 +145,7 @@ function DashboardPage() {
         <div className={styles.sidebarHeader}>
           <div className={styles.logo}>🍵</div>
           <h2 className={styles.brandName}>TAIWANTEA</h2>
-          <p className={styles.adminLabel}>Admin Panel</p>
+          <p className={styles.adminLabel}>管理後台</p>
         </div>
 
         <nav className={styles.nav}>
@@ -151,19 +153,31 @@ function DashboardPage() {
             className={`${styles.navItem} ${activeTab === 'products' ? styles.active : ''}`}
             onClick={() => setActiveTab('products')}
           >
-            📦 Products
+            📦 商品管理
           </button>
           <button
             className={`${styles.navItem} ${activeTab === 'categories' ? styles.active : ''}`}
             onClick={() => setActiveTab('categories')}
           >
-            🏷️ Categories
+            🏷️ 分類管理
+          </button>
+          <button
+            className={`${styles.navItem} ${activeTab === 'carousel' ? styles.active : ''}`}
+            onClick={() => setActiveTab('carousel')}
+          >
+            🎠 輪播圖管理
+          </button>
+          <button
+            className={`${styles.navItem} ${activeTab === 'intro' ? styles.active : ''}`}
+            onClick={() => setActiveTab('intro')}
+          >
+            📝 介紹區塊
           </button>
           <button
             className={`${styles.navItem} ${activeTab === 'settings' ? styles.active : ''}`}
             onClick={() => setActiveTab('settings')}
           >
-            ⚙️ Settings
+            ⚙️ 系統設定
           </button>
         </nav>
 
@@ -176,7 +190,7 @@ function DashboardPage() {
             </div>
           </div>
           <button onClick={handleLogout} className={styles.logoutButton}>
-            🚪 Logout
+            🚪 登出
           </button>
         </div>
       </aside>
@@ -186,9 +200,11 @@ function DashboardPage() {
         {/* Header */}
         <header className={styles.header}>
           <h1 className={styles.pageTitle}>
-            {activeTab === 'products' && '📦 Product Management'}
-            {activeTab === 'categories' && '🏷️ Category Management'}
-            {activeTab === 'settings' && '⚙️ Settings'}
+            {activeTab === 'products' && '📦 商品管理'}
+            {activeTab === 'categories' && '🏷️ 分類管理'}
+            {activeTab === 'carousel' && '🎠 輪播圖管理'}
+            {activeTab === 'intro' && '📝 介紹區塊'}
+            {activeTab === 'settings' && '⚙️ 系統設定'}
           </h1>
         </header>
 
@@ -199,28 +215,28 @@ function DashboardPage() {
               <div className={styles.stats}>
                 <div className={styles.statCard}>
                   <div className={styles.statValue}>{products.length}</div>
-                  <div className={styles.statLabel}>Total Products</div>
+                  <div className={styles.statLabel}>商品總數</div>
                 </div>
                 <div className={styles.statCard}>
                   <div className={styles.statValue}>{categories.length}</div>
-                  <div className={styles.statLabel}>Categories</div>
+                  <div className={styles.statLabel}>分類總數</div>
                 </div>
                 <div className={styles.statCard}>
                   <div className={styles.statValue}>
                     {products.filter(p => p.inStock).length}
                   </div>
-                  <div className={styles.statLabel}>In Stock</div>
+                  <div className={styles.statLabel}>庫存商品</div>
                 </div>
               </div>
 
               <div className={styles.actions}>
                 <button className={styles.primaryButton} onClick={handleAddProduct}>
-                  ➕ Add New Product
+                  ➕ 新增商品
                 </button>
               </div>
 
               {loading ? (
-                <div className={styles.loading}>Loading products...</div>
+                <div className={styles.loading}>載入商品中...</div>
               ) : (
                 <div className={styles.productsList}>
                   {categories.map((category) => {
@@ -246,9 +262,16 @@ function DashboardPage() {
                                 </div>
                               </div>
                               <div className={styles.productPrice}>NT${product.price}</div>
+                              <div className={styles.productBadge}>
+                                {product.badge ? (
+                                  <span className={styles.badgeTag}>{product.badge}</span>
+                                ) : (
+                                  <span className={styles.noBadge}>—</span>
+                                )}
+                              </div>
                               <div className={styles.productStock}>
                                 <span className={product.inStock ? styles.inStock : styles.outOfStock}>
-                                  {product.inStock ? '✓ In Stock' : '✗ Out of Stock'}
+                                  {product.inStock ? '✓ 有庫存' : '✗ 缺貨'}
                                 </span>
                               </div>
                               <div className={styles.productActions}>
@@ -256,13 +279,13 @@ function DashboardPage() {
                                   className={styles.editButton}
                                   onClick={() => handleEditProduct(product)}
                                 >
-                                  Edit
+                                  編輯
                                 </button>
                                 <button
                                   className={styles.deleteButton}
                                   onClick={() => handleDeleteProduct(product.id)}
                                 >
-                                  Delete
+                                  刪除
                                 </button>
                               </div>
                             </div>
@@ -280,7 +303,7 @@ function DashboardPage() {
             <div className={styles.categoriesTab}>
               <div className={styles.actions}>
                 <button className={styles.primaryButton} onClick={handleAddCategory}>
-                  ➕ Add New Category
+                  ➕ 新增分類
                 </button>
               </div>
 
@@ -291,8 +314,8 @@ function DashboardPage() {
                       <h3>{category.name}</h3>
                       <p>{category.description}</p>
                       <div className={styles.categoryMeta}>
-                        Order: {category.displayOrder} |
-                        Products: {productsByCategory[category.id]?.length || 0}
+                        顯示順序: {category.displayOrder} |
+                        商品數量: {productsByCategory[category.id]?.length || 0}
                       </div>
                     </div>
                     <div className={styles.categoryCardActions}>
@@ -300,13 +323,13 @@ function DashboardPage() {
                         className={styles.editButton}
                         onClick={() => handleEditCategory(category)}
                       >
-                        Edit
+                        編輯
                       </button>
                       <button
                         className={styles.deleteButton}
                         onClick={() => handleDeleteCategory(category.id)}
                       >
-                        Delete
+                        刪除
                       </button>
                     </div>
                   </div>
@@ -315,19 +338,27 @@ function DashboardPage() {
             </div>
           )}
 
+          {activeTab === 'carousel' && (
+            <CarouselManager toast={toast} />
+          )}
+
+          {activeTab === 'intro' && (
+            <IntroSectionEditor toast={toast} />
+          )}
+
           {activeTab === 'settings' && (
             <div className={styles.settingsTab}>
               <div className={styles.settingSection}>
-                <h3>Admin Information</h3>
-                <p><strong>Name:</strong> {user?.name}</p>
-                <p><strong>Email:</strong> {user?.email}</p>
+                <h3>管理員資訊</h3>
+                <p><strong>名稱:</strong> {user?.name}</p>
+                <p><strong>電子郵件:</strong> {user?.email}</p>
               </div>
 
               <div className={styles.settingSection}>
-                <h3>System Status</h3>
-                <p>✅ API Connected</p>
-                <p>✅ Database Connected</p>
-                <p>✅ {products.length} Products Loaded</p>
+                <h3>系統狀態</h3>
+                <p>✅ API 已連接</p>
+                <p>✅ 資料庫已連接</p>
+                <p>✅ 已載入 {products.length} 項商品</p>
               </div>
             </div>
           )}

@@ -1,0 +1,361 @@
+/**
+ * HeroCarousel Styles
+ *
+ * Full-screen immersive carousel with smooth transitions
+ */
+
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  overflow: hidden;
+  background: var(--color-gray-900);
+}
+
+/* Slides Container */
+.slidesContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Individual Slide */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 1;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+/* Overlay for better text readability */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.65) 50%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  z-index: 1;
+}
+
+/* Content Container */
+.content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--color-white);
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--spacing-lg);
+  color: #FFFFFF;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 4px 8px rgba(0, 0, 0, 0.7),
+    0 8px 16px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(0, 0, 0, 0.3);
+  animation: slideInUp 0.8s ease-out;
+  font-family: var(--font-heading);
+  letter-spacing: 3px;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-medium);
+  margin: 0 0 var(--spacing-2xl);
+  max-width: 800px;
+  color: #FFFFFF;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 4px 8px rgba(0, 0, 0, 0.6),
+    0 6px 12px rgba(0, 0, 0, 0.4);
+  animation: slideInUp 0.8s ease-out 0.2s backwards;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ctaButton {
+  padding: var(--spacing-md) var(--spacing-2xl);
+  background: var(--color-white);
+  color: var(--color-primary);
+  border: 2px solid var(--color-white);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: slideInUp 0.8s ease-out 0.4s backwards;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ctaButton:hover {
+  background: transparent;
+  color: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Navigation Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-white);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.arrow:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.arrowLeft {
+  left: var(--spacing-2xl);
+}
+
+.arrowRight {
+  right: var(--spacing-2xl);
+}
+
+/* Navigation Dots */
+.dots {
+  position: absolute;
+  bottom: var(--spacing-2xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.dot:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+.dot:disabled {
+  cursor: not-allowed;
+}
+
+.dotActive {
+  background: var(--color-white);
+  width: 40px;
+  border-radius: 6px;
+}
+
+/* Pause Indicator */
+.pauseIndicator {
+  position: absolute;
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--color-white);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  backdrop-filter: blur(10px);
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+  }
+
+  .arrow {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .arrowLeft {
+    left: var(--spacing-lg);
+  }
+
+  .arrowRight {
+    right: var(--spacing-lg);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .carousel {
+    height: 50vh;
+    min-height: 400px;
+  }
+
+  .content {
+    padding: var(--spacing-xl);
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .ctaButton {
+    padding: var(--spacing-sm) var(--spacing-xl);
+    font-size: var(--font-size-base);
+  }
+
+  .arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .arrowLeft {
+    left: var(--spacing-md);
+  }
+
+  .arrowRight {
+    right: var(--spacing-md);
+  }
+
+  .dots {
+    bottom: var(--spacing-lg);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .dotActive {
+    width: 30px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .carousel {
+    height: 45vh;
+    min-height: 350px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+  }
+
+  .ctaButton {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .title,
+  .subtitle,
+  .ctaButton {
+    animation: none;
+  }
+
+  .arrow:hover:not(:disabled),
+  .ctaButton:hover {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .arrow,
+  .dot {
+    border-width: 3px;
+  }
+
+  .overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}

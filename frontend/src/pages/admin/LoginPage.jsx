@@ -29,10 +29,10 @@ function LoginPage() {
       if (success) {
         navigate('/admin/dashboard');
       } else {
-        setError('Invalid email or password');
+        setError('電子郵件或密碼錯誤');
       }
     } catch (err) {
-      setError(err.message || 'Login failed. Please try again.');
+      setError(err.message || '登入失敗，請重試。');
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +45,7 @@ function LoginPage() {
         <div className={styles.header}>
           <div className={styles.logo}>🍵</div>
           <h1 className={styles.title}>TAIWANTEA</h1>
-          <p className={styles.subtitle}>Admin Panel</p>
+          <p className={styles.subtitle}>管理後台</p>
         </div>
 
         {/* Login Form */}
@@ -58,7 +58,7 @@ function LoginPage() {
 
           <div className={styles.field}>
             <label htmlFor="email" className={styles.label}>
-              Email
+              電子郵件
             </label>
             <input
               id="email"
@@ -75,7 +75,7 @@ function LoginPage() {
 
           <div className={styles.field}>
             <label htmlFor="password" className={styles.label}>
-              Password
+              密碼
             </label>
             <input
               id="password"
@@ -83,7 +83,7 @@ function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={styles.input}
-              placeholder="Enter your password"
+              placeholder="請輸入您的密碼"
               required
               autoComplete="current-password"
               disabled={isLoading}
@@ -95,14 +95,14 @@ function LoginPage() {
             className={styles.button}
             disabled={isLoading}
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? '登入中...' : '登入'}
           </button>
         </form>
 
         {/* Footer Info */}
         <div className={styles.footer}>
           <p className={styles.hint}>
-            💡 Default credentials: admin@taiwantea.com / Admin123!
+            💡 預設帳號: admin@taiwantea.com / Admin123!
           </p>
         </div>
       </div>

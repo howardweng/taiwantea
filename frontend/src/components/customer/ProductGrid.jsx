@@ -35,8 +35,8 @@ function ProductGrid({ categories, products, loading, error }) {
     return (
       <div className={styles.container}>
         <div className={styles.empty}>
-          <h2>No Categories Available</h2>
-          <p>Please check back later for our tea selection.</p>
+          <h2>目前無可用分類</h2>
+          <p>請稍後再查看我們的茶品選擇。</p>
         </div>
       </div>
     );
@@ -53,20 +53,19 @@ function ProductGrid({ categories, products, loading, error }) {
   }, {});
 
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        {categories.map((category) => {
-          const categoryProducts = productsByCategory[category.id] || [];
+    <div id="products" className={styles.container}>
+      {categories.map((category, index) => {
+        const categoryProducts = productsByCategory[category.id] || [];
 
-          return (
-            <CategorySection
-              key={category.id}
-              category={category}
-              products={categoryProducts}
-            />
-          );
-        })}
-      </main>
+        return (
+          <CategorySection
+            key={category.id}
+            category={category}
+            products={categoryProducts}
+            isAlternate={index % 2 === 0}
+          />
+        );
+      })}
     </div>
   );
 }

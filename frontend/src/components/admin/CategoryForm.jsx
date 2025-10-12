@@ -48,22 +48,22 @@ function CategoryForm({ category, onSubmit, onCancel }) {
     if (!category) {
       // ID is required for new categories
       if (!formData.id.trim()) {
-        newErrors.id = 'Category ID is required';
+        newErrors.id = '分類 ID 為必填';
       } else if (!/^[a-z0-9-]+$/.test(formData.id)) {
-        newErrors.id = 'ID must be lowercase alphanumeric with hyphens only';
+        newErrors.id = 'ID 只能包含小寫英文、數字和連字號';
       }
     }
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Category name is required';
+      newErrors.name = '分類名稱為必填';
     }
 
     if (!formData.description.trim() || formData.description.length < 10) {
-      newErrors.description = 'Description must be at least 10 characters';
+      newErrors.description = '描述至少需要 10 個字元';
     }
 
     if (formData.displayOrder < 0) {
-      newErrors.displayOrder = 'Display order must be 0 or greater';
+      newErrors.displayOrder = '顯示順序必須為 0 或更大';
     }
 
     setErrors(newErrors);
@@ -89,7 +89,7 @@ function CategoryForm({ category, onSubmit, onCancel }) {
       await onSubmit(submitData);
     } catch (error) {
       console.error('Failed to save category:', error);
-      setSubmitError(error.response?.data?.detail || error.message || 'Failed to save category');
+      setSubmitError(error.response?.data?.detail || error.message || '儲存分類失敗');
     } finally {
       setIsSubmitting(false);
     }
@@ -98,13 +98,13 @@ function CategoryForm({ category, onSubmit, onCancel }) {
   return (
     <div className={styles.formContainer}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h2 className={styles.formTitle}>{category ? 'Edit Category' : 'Add New Category'}</h2>
+        <h2 className={styles.formTitle}>{category ? '編輯分類' : '新增分類'}</h2>
 
         {submitError && <div className={styles.errorMessage}>{submitError}</div>}
 
         <div className={styles.formGroup}>
           <label htmlFor="id" className={styles.label}>
-            Category ID *
+            分類 ID *
           </label>
           <input
             type="text"
@@ -114,19 +114,19 @@ function CategoryForm({ category, onSubmit, onCancel }) {
             onChange={handleChange}
             disabled={!!category || isSubmitting}
             className={`${styles.input} ${errors.id ? styles.inputError : ''}`}
-            placeholder="e.g., green, black, oolong"
+            placeholder="例如: green, black, oolong"
           />
           {errors.id && <span className={styles.fieldError}>{errors.id}</span>}
           {!category && (
             <small className={styles.helpText}>
-              Use lowercase letters, numbers, and hyphens only. This cannot be changed later.
+              只能使用小寫英文、數字和連字號。建立後無法修改。
             </small>
           )}
         </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="name" className={styles.label}>
-            Category Name *
+            分類名稱 *
           </label>
           <input
             type="text"
@@ -136,14 +136,14 @@ function CategoryForm({ category, onSubmit, onCancel }) {
             onChange={handleChange}
             disabled={isSubmitting}
             className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-            placeholder="e.g., Green Tea"
+            placeholder="例如: 綠茶"
           />
           {errors.name && <span className={styles.fieldError}>{errors.name}</span>}
         </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="description" className={styles.label}>
-            Description *
+            分類描述 *
           </label>
           <textarea
             id="description"
@@ -152,14 +152,14 @@ function CategoryForm({ category, onSubmit, onCancel }) {
             onChange={handleChange}
             disabled={isSubmitting}
             className={`${styles.textarea} ${errors.description ? styles.inputError : ''}`}
-            placeholder="Describe this tea category..."
+            placeholder="描述此茶葉分類..."
           />
           {errors.description && <span className={styles.fieldError}>{errors.description}</span>}
         </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="displayOrder" className={styles.label}>
-            Display Order
+            顯示順序
           </label>
           <input
             type="number"
@@ -172,15 +172,15 @@ function CategoryForm({ category, onSubmit, onCancel }) {
             className={`${styles.input} ${errors.displayOrder ? styles.inputError : ''}`}
           />
           {errors.displayOrder && <span className={styles.fieldError}>{errors.displayOrder}</span>}
-          <small className={styles.helpText}>Categories are sorted by this number (0 = first)</small>
+          <small className={styles.helpText}>分類依此數字排序 (0 = 第一個)</small>
         </div>
 
         <div className={styles.formActions}>
           <button type="button" onClick={onCancel} className={styles.cancelButton} disabled={isSubmitting}>
-            Cancel
+            取消
           </button>
           <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : category ? 'Update Category' : 'Create Category'}
+            {isSubmitting ? '儲存中...' : category ? '更新分類' : '建立分類'}
           </button>
         </div>
       </form>

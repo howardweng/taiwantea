@@ -8,7 +8,7 @@ import traceback
 
 from src.config import settings
 from src.database import connect_to_mongo, close_mongo_connection
-from src.routers import auth, products, admin_products, admin_categories, upload
+from src.routers import auth, products, admin_products, admin_categories, upload, carousel, admin_carousel, intro_section, admin_intro_section
 from src.logger import logger
 from src.middleware.logging import add_logging_middleware
 from src.middleware.rate_limit import add_rate_limiting
@@ -91,8 +91,12 @@ async def health_check():
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(products.router, prefix="/api", tags=["Products"])
+app.include_router(carousel.router, prefix="/api", tags=["Carousel"])
+app.include_router(intro_section.router, prefix="/api", tags=["Intro Section"])
 app.include_router(admin_products.router, prefix="/api/admin", tags=["Admin - Products"])
 app.include_router(admin_categories.router, prefix="/api/admin", tags=["Admin - Categories"])
+app.include_router(admin_carousel.router, prefix="/api/admin", tags=["Admin - Carousel"])
+app.include_router(admin_intro_section.router, prefix="/api/admin", tags=["Admin - Intro Section"])
 app.include_router(upload.router, prefix="/api", tags=["Upload"])
 
 

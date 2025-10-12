@@ -60,7 +60,7 @@ function Navigation({ categories }) {
         <button
           onClick={scrollToTop}
           className={styles.brand}
-          aria-label="Go to top"
+          aria-label="回到頂部"
         >
           <span className={styles.brandIcon}>🍵</span>
           <span className={styles.brandText}>TAIWANTEA</span>
@@ -85,7 +85,7 @@ function Navigation({ categories }) {
         <button
           className={styles.menuToggle}
           onClick={toggleMenu}
-          aria-label="Toggle menu"
+          aria-label="切換選單"
           aria-expanded={isMenuOpen}
         >
           <span className={`${styles.hamburger} ${isMenuOpen ? styles.open : ''}`}>
@@ -104,7 +104,7 @@ function Navigation({ categories }) {
               onClick={scrollToTop}
               className={styles.mobileNavLink}
             >
-              🏠 Home
+              🏠 首頁
             </button>
           </li>
           {categories.map((category) => (

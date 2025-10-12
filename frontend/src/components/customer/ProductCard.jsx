@@ -26,6 +26,16 @@ function ProductCard({ product }) {
   // Format price to 2 decimal places
   const formattedPrice = `NT$${price.toFixed(2)}`;
 
+  // Translate badge to Chinese
+  const getBadgeText = (badge) => {
+    const badgeMap = {
+      'HOT': '熱銷',
+      'NEW': '新品',
+      'SALE': '特價'
+    };
+    return badgeMap[badge] || badge;
+  };
+
   const handleImageClick = () => {
     setShowModal(true);
   };
@@ -63,14 +73,14 @@ function ProductCard({ product }) {
           </div>
           {/* Custom badge from admin (e.g., "HOT", "NEW", "SALE") */}
           {badge && inStock && (
-            <div className={styles.productBadge} aria-label={`Badge: ${badge}`}>
-              {badge}
+            <div className={styles.productBadge} aria-label={`Badge: ${getBadgeText(badge)}`}>
+              {getBadgeText(badge)}
             </div>
           )}
           {/* Out of stock badge takes priority */}
           {!inStock && (
-            <div className={styles.stockBadge} aria-label="Out of stock">
-              Out of Stock
+            <div className={styles.stockBadge} aria-label="缺貨">
+              缺貨
             </div>
           )}
         </div>
@@ -90,12 +100,12 @@ function ProductCard({ product }) {
           </span>
 
           {inStock ? (
-            <span className={styles.stockStatus} aria-label="In stock">
-              In Stock
+            <span className={styles.stockStatus} aria-label="有庫存">
+              有庫存
             </span>
           ) : (
-            <span className={`${styles.stockStatus} ${styles.unavailable}`} aria-label="Out of stock">
-              Unavailable
+            <span className={`${styles.stockStatus} ${styles.unavailable}`} aria-label="缺貨">
+              缺貨
             </span>
           )}
         </div>

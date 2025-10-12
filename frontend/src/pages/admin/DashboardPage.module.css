@@ -242,7 +242,7 @@
 
 .productRow {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 0.8fr 1fr 1fr;
   gap: var(--spacing-lg);
   align-items: center;
   padding: var(--spacing-md);
@@ -282,6 +282,30 @@
   font-weight: 700;
   color: var(--color-primary);
   font-size: var(--font-size-lg);
+}
+
+.productBadge {
+  font-size: var(--font-size-sm);
+}
+
+.badgeTag {
+  display: inline-block;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 50%, #a71d2a 100%);
+  color: var(--color-white);
+  padding: 4px 10px;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.noBadge {
+  color: var(--color-text-light);
+  font-style: italic;
 }
 
 .productStock {

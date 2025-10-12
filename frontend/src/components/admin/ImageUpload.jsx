@@ -8,7 +8,7 @@ import { useState, useRef } from 'react';
 import api from '../../services/api';
 import styles from './ImageUpload.module.css';
 
-function ImageUpload({ value, onChange, onThumbnailChange, label, placeholder }) {
+function ImageUpload({ value, onChange, onThumbnailChange, label, placeholder, hideUrlInput = false }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(value || '');
@@ -129,16 +129,18 @@ function ImageUpload({ value, onChange, onThumbnailChange, label, placeholder })
       </div>
 
       {/* URL Input */}
-      <div className={styles.urlInput}>
-        <input
-          type="url"
-          value={previewUrl}
-          onChange={handleUrlChange}
-          placeholder="Or enter image URL..."
-          className={styles.input}
-          disabled={uploading}
-        />
-      </div>
+      {!hideUrlInput && (
+        <div className={styles.urlInput}>
+          <input
+            type="url"
+            value={previewUrl}
+            onChange={handleUrlChange}
+            placeholder="Or enter image URL..."
+            className={styles.input}
+            disabled={uploading}
+          />
+        </div>
+      )}
 
       {/* Error Message */}
       {error && <div className={styles.error}>{error}</div>}
