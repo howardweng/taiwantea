@@ -94,7 +94,7 @@ function IntroSectionEditor({ toast }) {
       <div className={styles.header}>
         <h2>介紹區塊設定</h2>
         <p className={styles.description}>
-          編輯首頁介紹區塊的內容、按鈕文字和連結
+          編輯首頁介紹區塊的內容和按鈕文字（按鈕連結會自動使用網站設定中的蝦皮商店網址）
         </p>
       </div>
 
@@ -123,23 +123,11 @@ function IntroSectionEditor({ toast }) {
               value={formData.buttonText}
               onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
               className={styles.input}
-              placeholder="例如：瀏覽全系列商品"
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>按鈕連結 *</label>
-            <input
-              type="text"
-              value={formData.buttonLink}
-              onChange={(e) => setFormData({ ...formData, buttonLink: e.target.value })}
-              className={styles.input}
-              placeholder="例如：https://shopee.tw/your-store"
+              placeholder="例如：於蝦皮賣場購買"
               required
             />
             <span className={styles.helpText}>
-              輸入完整網址（例如 Shopee 商店連結）
+              按鈕連結會自動使用「網站設定」中的「蝦皮商店網址」
             </span>
           </div>
         </div>

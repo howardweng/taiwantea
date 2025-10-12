@@ -14,7 +14,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import ErrorMessage from '../common/ErrorMessage';
 import styles from './ProductGrid.module.css';
 
-function ProductGrid({ categories, products, loading, error }) {
+function ProductGrid({ categories, products, loading, error, shopeeStoreUrl }) {
   if (loading) {
     return (
       <div className={styles.container}>
@@ -42,15 +42,17 @@ function ProductGrid({ categories, products, loading, error }) {
     );
   }
 
-  // Group products by category
-  const productsByCategory = products.reduce((acc, product) => {
-    const categoryId = product.category;
-    if (!acc[categoryId]) {
-      acc[categoryId] = [];
-    }
-    acc[categoryId].push(product);
-    return acc;
-  }, {});
+  // Filter only visible products (inStock = true) and group by category
+  const productsByCategory = products
+    .filter(product => product.inStock)
+    .reduce((acc, product) => {
+      const categoryId = product.category;
+      if (!acc[categoryId]) {
+        acc[categoryId] = [];
+      }
+      acc[categoryId].push(product);
+      return acc;
+    }, {});
 
   return (
     <div id="products" className={styles.container}>
@@ -63,6 +65,7 @@ function ProductGrid({ categories, products, loading, error }) {
             category={category}
             products={categoryProducts}
             isAlternate={index % 2 === 0}
+            shopeeStoreUrl={shopeeStoreUrl}
           />
         );
       })}
@@ -93,6 +96,7 @@ ProductGrid.propTypes = {
   ),
   loading: PropTypes.bool,
   error: PropTypes.string,
+  shopeeStoreUrl: PropTypes.string,
 };
 
 ProductGrid.defaultProps = {
@@ -100,6 +104,7 @@ ProductGrid.defaultProps = {
   products: [],
   loading: false,
   error: null,
+  shopeeStoreUrl: 'https://shopee.tw/',
 };
 
 export default ProductGrid;

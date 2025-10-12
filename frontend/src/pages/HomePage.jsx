@@ -10,6 +10,7 @@
  * - Responsive design
  */
 
+import { useState, useEffect } from 'react';
 import useProducts from '../hooks/useProducts';
 import useCarousel from '../hooks/useCarousel';
 import Navigation from '../components/layout/Navigation';
@@ -17,11 +18,28 @@ import ProductGrid from '../components/customer/ProductGrid';
 import BackToTop from '../components/layout/BackToTop';
 import HeroCarousel from '../components/customer/HeroCarousel';
 import IntroSection from '../components/customer/IntroSection';
+import api from '../services/api';
 import styles from './HomePage.module.css';
 
 function HomePage() {
   const { categories, products, loading, error } = useProducts();
   const { slides: carouselSlides, loading: carouselLoading } = useCarousel();
+  const [siteSettings, setSiteSettings] = useState(null);
+
+  // Fetch site settings
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const response = await api.get('/api/site-settings');
+        setSiteSettings(response.data);
+      } catch (error) {
+        console.error('Failed to fetch site settings:', error);
+        // Use default if fetch fails
+        setSiteSettings({ shopeeStoreUrl: 'https://shopee.tw/' });
+      }
+    };
+    fetchSiteSettings();
+  }, []);
 
   // Scroll to products section
   const scrollToProducts = () => {
@@ -63,6 +81,7 @@ function HomePage() {
         products={products}
         loading={loading}
         error={error}
+        shopeeStoreUrl={siteSettings?.shopeeStoreUrl || 'https://shopee.tw/'}
       />
 
       {/* Footer */}

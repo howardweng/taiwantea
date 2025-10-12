@@ -261,7 +261,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
               className={styles.checkbox}
               disabled={isSubmitting}
             />
-            <span>有庫存</span>
+            <span>顯示於首頁</span>
           </label>
         </div>
 

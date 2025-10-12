@@ -20,7 +20,8 @@ function SiteSettingsEditor({ toast }) {
     logoImageUrl: '',
     logoText: '',
     logoIcon: '🍵',
-    brandName: 'TAIWANTEA'
+    brandName: 'TAIWANTEA',
+    shopeeStoreUrl: 'https://shopee.tw/'
   });
 
   useEffect(() => {
@@ -36,7 +37,8 @@ function SiteSettingsEditor({ toast }) {
         logoImageUrl: response.data.logoImageUrl || '',
         logoText: response.data.logoText || '',
         logoIcon: response.data.logoIcon || '🍵',
-        brandName: response.data.brandName
+        brandName: response.data.brandName,
+        shopeeStoreUrl: response.data.shopeeStoreUrl || 'https://shopee.tw/'
       });
     } catch (error) {
       console.error('Failed to fetch site settings:', error);
@@ -47,7 +49,8 @@ function SiteSettingsEditor({ toast }) {
         logoImageUrl: '',
         logoText: '',
         logoIcon: '🍵',
-        brandName: 'TAIWANTEA'
+        brandName: 'TAIWANTEA',
+        shopeeStoreUrl: 'https://shopee.tw/'
       });
     } finally {
       setLoading(false);
@@ -110,7 +113,7 @@ function SiteSettingsEditor({ toast }) {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>網站設定</h2>
-        <p className={styles.description}>管理網站 Logo 和品牌名稱</p>
+        <p className={styles.description}>管理網站 Logo、品牌名稱和蝦皮商店連結</p>
       </div>
 
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -215,6 +218,26 @@ function SiteSettingsEditor({ toast }) {
           />
           <span className={styles.helpText}>
             顯示在導航列的品牌名稱
+          </span>
+        </div>
+
+        {/* Shopee Store URL */}
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="shopeeStoreUrl">
+            蝦皮商店網址 *
+          </label>
+          <input
+            type="url"
+            id="shopeeStoreUrl"
+            name="shopeeStoreUrl"
+            value={formData.shopeeStoreUrl}
+            onChange={handleInputChange}
+            className={styles.input}
+            required
+            placeholder="https://shopee.tw/your-store"
+          />
+          <span className={styles.helpText}>
+            此網址將用於所有商品卡片和介紹區塊的購買按鈕
           </span>
         </div>
 

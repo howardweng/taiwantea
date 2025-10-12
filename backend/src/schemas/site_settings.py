@@ -12,6 +12,7 @@ class SiteSettingsBase(BaseModel):
     logoText: Optional[str] = None
     logoIcon: Optional[str] = None  # Emoji or text icon
     brandName: str = Field(..., min_length=1, max_length=100)
+    shopeeStoreUrl: Optional[str] = Field(None, description="Shopee store URL for product links")
 
 
 class SiteSettingsResponse(SiteSettingsBase):
@@ -31,3 +32,4 @@ class SiteSettingsUpdateRequest(BaseModel):
     logoText: Optional[str] = None
     logoIcon: Optional[str] = None
     brandName: Optional[str] = Field(None, min_length=1, max_length=100)
+    shopeeStoreUrl: Optional[str] = Field(None, description="Shopee store URL for product links")

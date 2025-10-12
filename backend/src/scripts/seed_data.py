@@ -256,6 +256,7 @@ async def seed_database():
         "logoText": None,
         "logoIcon": "🍵",  # Tea cup emoji
         "brandName": "TAIWANTEA",
+        "shopeeStoreUrl": "https://shopee.tw/",  # Default Shopee store URL
         "createdAt": datetime.utcnow(),
         "updatedAt": datetime.utcnow()
     }

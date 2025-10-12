@@ -15,8 +15,9 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ProductCard.module.css';
 import ImageModal from './ImageModal';
+import ShopeeIcon from './ShopeeIcon';
 
-function ProductCard({ product }) {
+function ProductCard({ product, shopeeStoreUrl }) {
   const { id, name, category, description, price, imageUrl, thumbnailUrl, inStock, badge } = product;
   const [showModal, setShowModal] = useState(false);
 
@@ -99,14 +100,20 @@ function ProductCard({ product }) {
             {formattedPrice}
           </span>
 
-          {inStock ? (
-            <span className={styles.stockStatus} aria-label="有庫存">
-              有庫存
-            </span>
-          ) : (
-            <span className={`${styles.stockStatus} ${styles.unavailable}`} aria-label="缺貨">
-              缺貨
-            </span>
+          {inStock && (
+            <a
+              href={shopeeStoreUrl || "https://shopee.tw/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.shopeeButton}
+              aria-label={`在蝦皮購買 ${name}`}
+              title="在蝦皮購買"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <ShopeeIcon size={36} className={styles.shopeeIcon} />
+            </a>
           )}
         </div>
       </div>
@@ -135,6 +142,11 @@ ProductCard.propTypes = {
     inStock: PropTypes.bool.isRequired,
     badge: PropTypes.string,  // Optional badge text
   }).isRequired,
+  shopeeStoreUrl: PropTypes.string,
+};
+
+ProductCard.defaultProps = {
+  shopeeStoreUrl: 'https://shopee.tw/',
 };
 
 export default ProductCard;

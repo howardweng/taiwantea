@@ -311,7 +311,7 @@ function DashboardPage() {
                   <div className={styles.statValue}>
                     {products.filter(p => p.inStock).length}
                   </div>
-                  <div className={styles.statLabel}>庫存商品</div>
+                  <div className={styles.statLabel}>顯示商品</div>
                 </div>
               </div>
 
@@ -394,7 +394,7 @@ function DashboardPage() {
                                         </div>
                                         <div className={styles.productStock}>
                                           <span className={product.inStock ? styles.inStock : styles.outOfStock}>
-                                            {product.inStock ? '✓ 有庫存' : '✗ 缺貨'}
+                                            {product.inStock ? '✓ 顯示' : '✗ 隱藏'}
                                           </span>
                                         </div>
                                         <div className={styles.productActions}>

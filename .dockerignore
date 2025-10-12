@@ -1,0 +1,70 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+README.md
+docs/
+specs/
+mockups/
+
+# Environment files (will be set via docker-compose)
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# Python
+backend/__pycache__
+backend/**/__pycache__
+backend/.pytest_cache
+backend/.coverage
+backend/htmlcov
+backend/venv
+backend/.venv
+backend/**/*.pyc
+backend/**/*.pyo
+backend/**/*.pyd
+
+# Node
+frontend/node_modules
+frontend/dist
+frontend/.vite
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+logs/
+backend/logs/
+
+# Docker
+Dockerfile.old
+docker-compose.yml
+docker-compose.*.yml.old
+
+# Test
+backend/tests
+frontend/tests
+
+# Build artifacts
+*.tar.gz
+*.zip
+
+# Claude and other tools
+.claude
+.specify
+
+# Images (except what's in uploads)
+*.png
+*.jpg
+*.jpeg
+*.gif
+!backend/uploads/**

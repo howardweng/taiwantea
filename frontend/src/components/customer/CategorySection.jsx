@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import ProductCard from './ProductCard';
 import styles from './CategorySection.module.css';
 
-function CategorySection({ category, products, isAlternate }) {
+function CategorySection({ category, products, isAlternate, shopeeStoreUrl }) {
   const { id, name, description, imageUrl } = category;
 
   // Create anchor ID from category ID (e.g., "green-tea")
@@ -51,7 +51,7 @@ function CategorySection({ category, products, isAlternate }) {
           <div className={styles.grid} role="list">
             {products.map((product) => (
               <div key={product.id} role="listitem">
-                <ProductCard product={product} />
+                <ProductCard product={product} shopeeStoreUrl={shopeeStoreUrl} />
               </div>
             ))}
           </div>
@@ -85,10 +85,12 @@ CategorySection.propTypes = {
     })
   ).isRequired,
   isAlternate: PropTypes.bool,
+  shopeeStoreUrl: PropTypes.string,
 };
 
 CategorySection.defaultProps = {
   isAlternate: false,
+  shopeeStoreUrl: 'https://shopee.tw/',
 };
 
 export default CategorySection;

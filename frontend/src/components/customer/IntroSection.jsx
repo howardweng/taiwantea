@@ -11,9 +11,11 @@ import styles from './IntroSection.module.css';
 function IntroSection() {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [siteSettings, setSiteSettings] = useState(null);
 
   useEffect(() => {
     fetchContent();
+    fetchSiteSettings();
   }, []);
 
   const fetchContent = async () => {
@@ -28,10 +30,20 @@ function IntroSection() {
     }
   };
 
-  const handleButtonClick = () => {
-    if (content?.buttonLink) {
-      window.open(content.buttonLink, '_blank', 'noopener,noreferrer');
+  const fetchSiteSettings = async () => {
+    try {
+      const response = await api.get('/api/site-settings');
+      setSiteSettings(response.data);
+    } catch (error) {
+      console.error('Failed to fetch site settings:', error);
+      // Use default if fetch fails
+      setSiteSettings({ shopeeStoreUrl: 'https://shopee.tw/' });
     }
+  };
+
+  const handleButtonClick = () => {
+    const url = siteSettings?.shopeeStoreUrl || 'https://shopee.tw/';
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   // Don't render if loading, no content, or inactive
