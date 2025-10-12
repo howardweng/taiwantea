@@ -248,6 +248,26 @@ async def seed_database():
     else:
         print("⚠ Intro section already exists, skipping")
 
+    # === 7. Create Initial Site Settings ===
+
+    site_settings = {
+        "logoType": "text",  # "image" or "text"
+        "logoImageUrl": None,
+        "logoText": None,
+        "logoIcon": "🍵",  # Tea cup emoji
+        "brandName": "TAIWANTEA",
+        "createdAt": datetime.utcnow(),
+        "updatedAt": datetime.utcnow()
+    }
+
+    # Only insert if site settings don't exist
+    settings_count = await db.site_settings.count_documents({})
+    if settings_count == 0:
+        await db.site_settings.insert_one(site_settings)
+        print("✓ Inserted site settings")
+    else:
+        print("⚠ Site settings already exist, skipping")
+
     print("\n✅ Database seeding complete!")
 
     client.close()

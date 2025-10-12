@@ -48,6 +48,22 @@
 
 .brandIcon {
   font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.brandImage {
+  max-height: 50px;
+  max-width: 150px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brandTextContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  text-align: center;
 }
 
 .brandText {
@@ -56,6 +72,14 @@
   color: var(--color-primary);
   font-family: var(--font-heading);
   letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.brandSubtext {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 /* Desktop Navigation Links */

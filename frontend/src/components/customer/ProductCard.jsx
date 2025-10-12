@@ -86,13 +86,13 @@ function ProductCard({ product }) {
         </div>
 
       <div className={styles.content}>
-        <h3 className={styles.name}>{name}</h3>
+        <h3 className={styles.name} title={name}>{name}</h3>
 
-        <p className={styles.category} aria-label={`Category: ${category}`}>
+        <p className={styles.category} aria-label={`Category: ${category}`} title={category}>
           {category}
         </p>
 
-        <p className={styles.description}>{description}</p>
+        <p className={styles.description} title={description}>{description}</p>
 
         <div className={styles.footer}>
           <span className={styles.price} aria-label={`Price: ${formattedPrice}`}>

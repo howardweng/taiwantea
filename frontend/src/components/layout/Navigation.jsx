@@ -6,11 +6,32 @@
 
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import api from '../../services/api';
 import styles from './Navigation.module.css';
 
 function Navigation({ categories }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [siteSettings, setSiteSettings] = useState(null);
+
+  // Fetch site settings
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const response = await api.get('/api/site-settings');
+        setSiteSettings(response.data);
+      } catch (error) {
+        console.error('Failed to fetch site settings:', error);
+        // Use default values if fetch fails
+        setSiteSettings({
+          logoType: 'text',
+          logoIcon: '🍵',
+          brandName: 'TAIWANTEA'
+        });
+      }
+    };
+    fetchSiteSettings();
+  }, []);
 
   // Handle scroll to add shadow when scrolled
   useEffect(() => {
@@ -62,8 +83,35 @@ function Navigation({ categories }) {
           className={styles.brand}
           aria-label="回到頂部"
         >
-          <span className={styles.brandIcon}>🍵</span>
-          <span className={styles.brandText}>TAIWANTEA</span>
+          {siteSettings && (
+            <>
+              {siteSettings.logoType === 'image' ? (
+                <>
+                  <img
+                    src={siteSettings.logoImageUrl}
+                    alt={siteSettings.brandName}
+                    className={styles.brandImage}
+                  />
+                  <div className={styles.brandTextContainer}>
+                    <span className={styles.brandText}>{siteSettings.brandName}</span>
+                    {siteSettings.logoText && (
+                      <span className={styles.brandSubtext}>{siteSettings.logoText}</span>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className={styles.brandIcon}>{siteSettings.logoIcon}</span>
+                  <div className={styles.brandTextContainer}>
+                    <span className={styles.brandText}>{siteSettings.brandName}</span>
+                    {siteSettings.logoText && (
+                      <span className={styles.brandSubtext}>{siteSettings.logoText}</span>
+                    )}
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </button>
 
         {/* Desktop Navigation Links */}

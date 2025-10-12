@@ -4,8 +4,9 @@
  * Main admin interface with product management
  */
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useAuth } from '../../hooks/useAuth.jsx';
 import { useToast } from '../../components/common/ToastContainer.jsx';
 import useProducts from '../../hooks/useProducts';
@@ -13,8 +14,10 @@ import ProductForm from '../../components/admin/ProductForm';
 import CategoryForm from '../../components/admin/CategoryForm';
 import CarouselManager from '../../components/admin/CarouselManager';
 import IntroSectionEditor from '../../components/admin/IntroSectionEditor';
+import SiteSettingsEditor from '../../components/admin/SiteSettingsEditor';
 import { createProduct, updateProduct, deleteProduct } from '../../services/adminProductService';
 import { createCategory, updateCategory, deleteCategory } from '../../services/adminCategoryService';
+import api from '../../services/api';
 import styles from './DashboardPage.module.css';
 
 function DashboardPage() {
@@ -22,12 +25,27 @@ function DashboardPage() {
   const toast = useToast();
   const { categories, products, loading, refetch } = useProducts();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState('products');
+  // Get tab from URL query parameter, default to 'products'
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'products');
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
+
+  // Sync activeTab with URL query parameter
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab') || 'products';
+    setActiveTab(tabFromUrl);
+  }, [searchParams]);
+
+  // Function to change tab and update URL
+  const handleTabChange = (tab) => {
+    setSearchParams({ tab });
+    setActiveTab(tab);
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -130,6 +148,36 @@ function DashboardPage() {
     setEditingCategory(null);
   };
 
+  // Handle category drag and drop
+  const handleCategoryDragEnd = async (result) => {
+    if (!result.destination) return;
+
+    const items = Array.from(categories);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    // Update display order for all categories
+    try {
+      const updates = items.map((category, index) => ({
+        id: category.id,
+        displayOrder: index
+      }));
+
+      // Update each category
+      for (const update of updates) {
+        await api.put(`/api/admin/categories/${update.id}`, {
+          displayOrder: update.displayOrder
+        });
+      }
+
+      toast.success('分類順序已更新');
+      refetch();
+    } catch (error) {
+      console.error('Failed to update category order:', error);
+      toast.error('更新分類順序失敗');
+    }
+  };
+
   // Group products by category
   const productsByCategory = products.reduce((acc, product) => {
     const cat = product.category;
@@ -151,31 +199,31 @@ function DashboardPage() {
         <nav className={styles.nav}>
           <button
             className={`${styles.navItem} ${activeTab === 'products' ? styles.active : ''}`}
-            onClick={() => setActiveTab('products')}
+            onClick={() => handleTabChange('products')}
           >
             📦 商品管理
           </button>
           <button
             className={`${styles.navItem} ${activeTab === 'categories' ? styles.active : ''}`}
-            onClick={() => setActiveTab('categories')}
+            onClick={() => handleTabChange('categories')}
           >
             🏷️ 分類管理
           </button>
           <button
             className={`${styles.navItem} ${activeTab === 'carousel' ? styles.active : ''}`}
-            onClick={() => setActiveTab('carousel')}
+            onClick={() => handleTabChange('carousel')}
           >
             🎠 輪播圖管理
           </button>
           <button
             className={`${styles.navItem} ${activeTab === 'intro' ? styles.active : ''}`}
-            onClick={() => setActiveTab('intro')}
+            onClick={() => handleTabChange('intro')}
           >
             📝 介紹區塊
           </button>
           <button
             className={`${styles.navItem} ${activeTab === 'settings' ? styles.active : ''}`}
-            onClick={() => setActiveTab('settings')}
+            onClick={() => handleTabChange('settings')}
           >
             ⚙️ 系統設定
           </button>
@@ -307,34 +355,66 @@ function DashboardPage() {
                 </button>
               </div>
 
-              <div className={styles.categoryList}>
-                {categories.map((category) => (
-                  <div key={category.id} className={styles.categoryCard}>
-                    <div className={styles.categoryCardContent}>
-                      <h3>{category.name}</h3>
-                      <p>{category.description}</p>
-                      <div className={styles.categoryMeta}>
-                        顯示順序: {category.displayOrder} |
-                        商品數量: {productsByCategory[category.id]?.length || 0}
-                      </div>
+              <DragDropContext onDragEnd={handleCategoryDragEnd}>
+                <Droppable droppableId="categories">
+                  {(provided) => (
+                    <div
+                      className={styles.categoryList}
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      {categories.map((category, index) => (
+                        <Draggable
+                          key={category.id}
+                          draggableId={String(category.id)}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={`${styles.categoryCard} ${snapshot.isDragging ? styles.dragging : ''}`}
+                            >
+                              <div
+                                {...provided.dragHandleProps}
+                                className={styles.dragHandle}
+                                aria-label="Drag to reorder"
+                              >
+                                ⋮⋮
+                              </div>
+                              <div className={styles.categoryCardMain}>
+                                <div className={styles.categoryCardContent}>
+                                  <h3>{category.name}</h3>
+                                  <p>{category.description}</p>
+                                  <div className={styles.categoryMeta}>
+                                    顯示順序: {category.displayOrder} |
+                                    商品數量: {productsByCategory[category.id]?.length || 0}
+                                  </div>
+                                </div>
+                                <div className={styles.categoryCardActions}>
+                                  <button
+                                    className={styles.editButton}
+                                    onClick={() => handleEditCategory(category)}
+                                  >
+                                    編輯
+                                  </button>
+                                  <button
+                                    className={styles.deleteButton}
+                                    onClick={() => handleDeleteCategory(category.id)}
+                                  >
+                                    刪除
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
                     </div>
-                    <div className={styles.categoryCardActions}>
-                      <button
-                        className={styles.editButton}
-                        onClick={() => handleEditCategory(category)}
-                      >
-                        編輯
-                      </button>
-                      <button
-                        className={styles.deleteButton}
-                        onClick={() => handleDeleteCategory(category.id)}
-                      >
-                        刪除
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </div>
           )}
 
@@ -347,20 +427,7 @@ function DashboardPage() {
           )}
 
           {activeTab === 'settings' && (
-            <div className={styles.settingsTab}>
-              <div className={styles.settingSection}>
-                <h3>管理員資訊</h3>
-                <p><strong>名稱:</strong> {user?.name}</p>
-                <p><strong>電子郵件:</strong> {user?.email}</p>
-              </div>
-
-              <div className={styles.settingSection}>
-                <h3>系統狀態</h3>
-                <p>✅ API 已連接</p>
-                <p>✅ 資料庫已連接</p>
-                <p>✅ 已載入 {products.length} 項商品</p>
-              </div>
-            </div>
+            <SiteSettingsEditor toast={toast} />
           )}
         </div>
       </main>
