@@ -18,6 +18,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
     thumbnailUrl: '',
     inStock: true,
     displayOrder: 999,
+    badge: '',  // Badge text field
   });
 
   const [errors, setErrors] = useState({});
@@ -35,6 +36,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
         thumbnailUrl: product.thumbnailUrl || '',
         inStock: product.inStock ?? true,
         displayOrder: product.displayOrder || 999,
+        badge: product.badge || '',  // Load existing badge
       });
     }
   }, [product]);
@@ -206,6 +208,27 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
               disabled={isSubmitting}
             />
           </div>
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="badge" className={styles.label}>
+            Badge Text (Optional)
+          </label>
+          <input
+            type="text"
+            id="badge"
+            name="badge"
+            value={formData.badge}
+            onChange={handleChange}
+            maxLength={20}
+            placeholder="e.g., HOT, NEW, SALE (leave empty for no badge)"
+            className={styles.input}
+            disabled={isSubmitting}
+          />
+          <span className={styles.helpText}>
+            Optional badge to display on product card (max 20 characters).
+            Common badges: HOT, NEW, SALE, 熱銷, 特價
+          </span>
         </div>
 
         <ImageUpload

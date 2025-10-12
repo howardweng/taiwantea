@@ -42,6 +42,7 @@ class ProductResponse(BaseModel):
     imageUrl: str
     thumbnailUrl: Optional[str] = None
     inStock: bool
+    badge: Optional[str] = None  # Badge text: "HOT", "NEW", "SALE", or custom text
 
     class Config:
         populate_by_name = True
@@ -77,6 +78,7 @@ class ProductCreateRequest(BaseModel):
     thumbnailUrl: Optional[str] = None
     inStock: bool = True
     displayOrder: int = Field(default=999, ge=0)
+    badge: Optional[str] = Field(None, max_length=20)  # Optional badge text (max 20 chars)
 
 
 class ProductUpdateRequest(BaseModel):
@@ -89,3 +91,4 @@ class ProductUpdateRequest(BaseModel):
     thumbnailUrl: Optional[str] = None
     inStock: Optional[bool] = None
     displayOrder: Optional[int] = Field(None, ge=0)
+    badge: Optional[str] = Field(None, max_length=20)  # Optional badge text

@@ -17,7 +17,7 @@ import styles from './ProductCard.module.css';
 import ImageModal from './ImageModal';
 
 function ProductCard({ product }) {
-  const { id, name, category, description, price, imageUrl, thumbnailUrl, inStock } = product;
+  const { id, name, category, description, price, imageUrl, thumbnailUrl, inStock, badge } = product;
   const [showModal, setShowModal] = useState(false);
 
   // Use thumbnail for card display, full image for modal
@@ -61,6 +61,13 @@ function ProductCard({ product }) {
           <div className={styles.imageOverlay}>
             <span className={styles.zoomIcon}>🔍</span>
           </div>
+          {/* Custom badge from admin (e.g., "HOT", "NEW", "SALE") */}
+          {badge && inStock && (
+            <div className={styles.productBadge} aria-label={`Badge: ${badge}`}>
+              {badge}
+            </div>
+          )}
+          {/* Out of stock badge takes priority */}
           {!inStock && (
             <div className={styles.stockBadge} aria-label="Out of stock">
               Out of Stock
@@ -116,6 +123,7 @@ ProductCard.propTypes = {
     imageUrl: PropTypes.string.isRequired,
     thumbnailUrl: PropTypes.string,
     inStock: PropTypes.bool.isRequired,
+    badge: PropTypes.string,  // Optional badge text
   }).isRequired,
 };
 

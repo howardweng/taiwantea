@@ -63,5 +63,19 @@ def setup_logger(name: str = "taiwantea") -> logging.Logger:
     return logger
 
 
+# Alias for compatibility
+def get_logger(name: str = "taiwantea") -> logging.Logger:
+    """
+    Get or create a logger instance (alias for setup_logger)
+
+    Args:
+        name: Logger name
+
+    Returns:
+        Configured logger instance
+    """
+    return setup_logger(name)
+
+
 # Create default logger instance
 logger = setup_logger()
