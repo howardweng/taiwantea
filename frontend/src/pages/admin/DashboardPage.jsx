@@ -34,6 +34,7 @@ function DashboardPage() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [isReordering, setIsReordering] = useState(false);
 
   // Sync activeTab with URL query parameter
   useEffect(() => {
@@ -157,6 +158,7 @@ function DashboardPage() {
     items.splice(result.destination.index, 0, reorderedItem);
 
     // Update display order for all categories
+    setIsReordering(true);
     try {
       const updates = items.map((category, index) => ({
         id: category.id,
@@ -175,6 +177,42 @@ function DashboardPage() {
     } catch (error) {
       console.error('Failed to update category order:', error);
       toast.error('更新分類順序失敗');
+    } finally {
+      setIsReordering(false);
+    }
+  };
+
+  // Handle product drag and drop within category
+  const handleProductDragEnd = async (result, categoryId) => {
+    if (!result.destination) return;
+
+    const categoryProducts = productsByCategory[categoryId] || [];
+    const items = Array.from(categoryProducts);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    // Update display order for products in this category
+    setIsReordering(true);
+    try {
+      const updates = items.map((product, index) => ({
+        id: product.id,
+        displayOrder: index
+      }));
+
+      // Update each product
+      for (const update of updates) {
+        await api.put(`/api/admin/products/${update.id}`, {
+          displayOrder: update.displayOrder
+        });
+      }
+
+      toast.success('商品順序已更新');
+      refetch();
+    } catch (error) {
+      console.error('Failed to update product order:', error);
+      toast.error('更新商品順序失敗');
+    } finally {
+      setIsReordering(false);
     }
   };
 
@@ -287,6 +325,15 @@ function DashboardPage() {
                 <div className={styles.loading}>載入商品中...</div>
               ) : (
                 <div className={styles.productsList}>
+                  {isReordering && (
+                    <div className={styles.loadingOverlay}>
+                      <div className={styles.loadingSpinner}>
+                        <div className={styles.spinner}></div>
+                        <p>更新商品順序中...</p>
+                      </div>
+                    </div>
+                  )}
+
                   {categories.map((category) => {
                     const categoryProducts = productsByCategory[category.id] || [];
 
@@ -295,50 +342,84 @@ function DashboardPage() {
                         <h3 className={styles.categoryTitle}>
                           {category.name} ({categoryProducts.length})
                         </h3>
-                        <div className={styles.productTable}>
-                          {categoryProducts.map((product) => (
-                            <div key={product.id} className={styles.productRow}>
-                              <div className={styles.productInfo}>
-                                <img
-                                  src={product.thumbnailUrl || product.imageUrl}
-                                  alt={product.name}
-                                  className={styles.productImage}
-                                />
-                                <div>
-                                  <div className={styles.productName}>{product.name}</div>
-                                  <div className={styles.productCategory}>{category.name}</div>
-                                </div>
+                        <DragDropContext onDragEnd={(result) => handleProductDragEnd(result, category.id)}>
+                          <Droppable droppableId={`category-${category.id}`}>
+                            {(provided) => (
+                              <div
+                                className={styles.productTable}
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                              >
+                                {categoryProducts.map((product, index) => (
+                                  <Draggable
+                                    key={product.id}
+                                    draggableId={String(product.id)}
+                                    index={index}
+                                  >
+                                    {(provided, snapshot) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        className={`${styles.productRow} ${snapshot.isDragging ? styles.dragging : ''}`}
+                                      >
+                                        <div
+                                          {...provided.dragHandleProps}
+                                          className={styles.productDragHandle}
+                                          aria-label="Drag to reorder"
+                                        >
+                                          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                            <rect x="3" y="4" width="14" height="2" rx="1"/>
+                                            <rect x="3" y="9" width="14" height="2" rx="1"/>
+                                            <rect x="3" y="14" width="14" height="2" rx="1"/>
+                                          </svg>
+                                        </div>
+                                        <div className={styles.productInfo}>
+                                          <img
+                                            src={product.thumbnailUrl || product.imageUrl}
+                                            alt={product.name}
+                                            className={styles.productImage}
+                                          />
+                                          <div>
+                                            <div className={styles.productName}>{product.name}</div>
+                                            <div className={styles.productCategory}>{category.name}</div>
+                                          </div>
+                                        </div>
+                                        <div className={styles.productPrice}>NT${product.price}</div>
+                                        <div className={styles.productBadge}>
+                                          {product.badge ? (
+                                            <span className={styles.badgeTag}>{product.badge}</span>
+                                          ) : (
+                                            <span className={styles.noBadge}>—</span>
+                                          )}
+                                        </div>
+                                        <div className={styles.productStock}>
+                                          <span className={product.inStock ? styles.inStock : styles.outOfStock}>
+                                            {product.inStock ? '✓ 有庫存' : '✗ 缺貨'}
+                                          </span>
+                                        </div>
+                                        <div className={styles.productActions}>
+                                          <button
+                                            className={styles.editButton}
+                                            onClick={() => handleEditProduct(product)}
+                                          >
+                                            編輯
+                                          </button>
+                                          <button
+                                            className={styles.deleteButton}
+                                            onClick={() => handleDeleteProduct(product.id)}
+                                          >
+                                            刪除
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
                               </div>
-                              <div className={styles.productPrice}>NT${product.price}</div>
-                              <div className={styles.productBadge}>
-                                {product.badge ? (
-                                  <span className={styles.badgeTag}>{product.badge}</span>
-                                ) : (
-                                  <span className={styles.noBadge}>—</span>
-                                )}
-                              </div>
-                              <div className={styles.productStock}>
-                                <span className={product.inStock ? styles.inStock : styles.outOfStock}>
-                                  {product.inStock ? '✓ 有庫存' : '✗ 缺貨'}
-                                </span>
-                              </div>
-                              <div className={styles.productActions}>
-                                <button
-                                  className={styles.editButton}
-                                  onClick={() => handleEditProduct(product)}
-                                >
-                                  編輯
-                                </button>
-                                <button
-                                  className={styles.deleteButton}
-                                  onClick={() => handleDeleteProduct(product.id)}
-                                >
-                                  刪除
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                            )}
+                          </Droppable>
+                        </DragDropContext>
                       </div>
                     );
                   })}
@@ -354,6 +435,15 @@ function DashboardPage() {
                   ➕ 新增分類
                 </button>
               </div>
+
+              {isReordering && (
+                <div className={styles.loadingOverlay}>
+                  <div className={styles.loadingSpinner}>
+                    <div className={styles.spinner}></div>
+                    <p>更新分類順序中...</p>
+                  </div>
+                </div>
+              )}
 
               <DragDropContext onDragEnd={handleCategoryDragEnd}>
                 <Droppable droppableId="categories">
@@ -380,7 +470,11 @@ function DashboardPage() {
                                 className={styles.dragHandle}
                                 aria-label="Drag to reorder"
                               >
-                                ⋮⋮
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                  <rect x="3" y="4" width="14" height="2" rx="1"/>
+                                  <rect x="3" y="9" width="14" height="2" rx="1"/>
+                                  <rect x="3" y="14" width="14" height="2" rx="1"/>
+                                </svg>
                               </div>
                               <div className={styles.categoryCardMain}>
                                 <div className={styles.categoryCardContent}>

@@ -4,7 +4,7 @@
  * Reusable image upload component with preview
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import api from '../../services/api';
 import styles from './ImageUpload.module.css';
 
@@ -13,6 +13,11 @@ function ImageUpload({ value, onChange, onThumbnailChange, label, placeholder, h
   const [error, setError] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(value || '');
   const fileInputRef = useRef(null);
+
+  // Update preview when value prop changes (important for editing mode)
+  useEffect(() => {
+    setPreviewUrl(value || '');
+  }, [value]);
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
