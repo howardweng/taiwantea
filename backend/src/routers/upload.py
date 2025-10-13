@@ -129,9 +129,9 @@ async def upload_image(
                 os.remove(full_path)
             raise HTTPException(status_code=500, detail=f"Failed to create thumbnail: {str(e)}")
 
-        # Return URLs
-        image_url = f"{settings.API_URL}/api/uploads/products/{full_filename}"
-        thumbnail_url = f"{settings.API_URL}/api/uploads/products/{thumb_filename}"
+        # Return relative URLs (works in both dev and production)
+        image_url = f"/api/uploads/products/{full_filename}"
+        thumbnail_url = f"/api/uploads/products/{thumb_filename}"
 
         return {
             "success": True,
