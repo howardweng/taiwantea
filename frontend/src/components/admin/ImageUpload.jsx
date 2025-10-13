@@ -137,10 +137,10 @@ function ImageUpload({ value, onChange, onThumbnailChange, label, placeholder, h
       {!hideUrlInput && (
         <div className={styles.urlInput}>
           <input
-            type="url"
+            type="text"
             value={previewUrl}
             onChange={handleUrlChange}
-            placeholder="Or enter image URL..."
+            placeholder="Or enter image URL (absolute or relative)..."
             className={styles.input}
             disabled={uploading}
           />
