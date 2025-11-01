@@ -85,6 +85,29 @@
   min-height: 300px;
 }
 
+/* Make images inline-block so text-align works */
+.editor :global(.ql-editor img) {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Quill editor alignment classes */
+.editor :global(.ql-align-center) {
+  text-align: center !important;
+}
+
+.editor :global(.ql-align-right) {
+  text-align: right !important;
+}
+
+.editor :global(.ql-align-justify) {
+  text-align: justify !important;
+}
+
+.editor :global(.ql-align-left) {
+  text-align: left !important;
+}
+
 .checkboxLabel {
   display: flex;
   align-items: center;
@@ -125,6 +148,52 @@
 .saveButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Image resize styles */
+.editor :global(.ql-editor img) {
+  cursor: pointer;
+}
+
+.editor :global(.image-resize-overlay) {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px dashed #4c6ef5;
+}
+
+.editor :global(.image-resize-handle) {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #4c6ef5;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  opacity: 0.8;
+  cursor: nwse-resize;
+}
+
+.editor :global(.image-resize-handle-sw) {
+  bottom: -6px;
+  left: -6px;
+  cursor: nesw-resize;
+}
+
+.editor :global(.image-resize-handle-se) {
+  bottom: -6px;
+  right: -6px;
+  cursor: nwse-resize;
+}
+
+.editor :global(.image-resize-handle-nw) {
+  top: -6px;
+  left: -6px;
+  cursor: nwse-resize;
+}
+
+.editor :global(.image-resize-handle-ne) {
+  top: -6px;
+  right: -6px;
+  cursor: nesw-resize;
 }
 
 /* Responsive */

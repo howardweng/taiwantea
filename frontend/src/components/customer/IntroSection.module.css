@@ -7,18 +7,34 @@
   margin-bottom: 40px;
   padding: var(--spacing-4xl) var(--spacing-2xl);
   background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
-  text-align: center;
 }
 
 .content {
-  max-width: 800px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
 .htmlContent {
   margin-bottom: var(--spacing-2xl);
   color: var(--color-gray-700);
-  line-height: 1.8;
+  line-height: 1.42;
+}
+
+/* Quill editor alignment classes */
+.htmlContent :global(.ql-align-center) {
+  text-align: center !important;
+}
+
+.htmlContent :global(.ql-align-right) {
+  text-align: right !important;
+}
+
+.htmlContent :global(.ql-align-justify) {
+  text-align: justify !important;
+}
+
+.htmlContent :global(.ql-align-left) {
+  text-align: left !important;
 }
 
 .htmlContent h1,
@@ -43,8 +59,31 @@
 }
 
 .htmlContent p {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 0;
   font-size: var(--font-size-base);
+}
+
+.htmlContent img {
+  max-width: 100%;
+  display: inline-block;
+  margin: var(--spacing-md) 0;
+}
+
+/* Support for Quill image alignment */
+.htmlContent p img {
+  display: inline-block;
+}
+
+.htmlContent :global(.ql-align-center) {
+  text-align: center;
+}
+
+.htmlContent :global(.ql-align-right) {
+  text-align: right;
+}
+
+.htmlContent :global(.ql-align-left) {
+  text-align: left;
 }
 
 .htmlContent a {
@@ -60,6 +99,11 @@
 
 .htmlContent li {
   margin-bottom: var(--spacing-xs);
+}
+
+.buttonContainer {
+  text-align: center;
+  margin-top: var(--spacing-xl);
 }
 
 .ctaButton {

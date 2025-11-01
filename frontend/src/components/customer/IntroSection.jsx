@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import 'react-quill/dist/quill.snow.css';
 import api from '../../services/api';
 import styles from './IntroSection.module.css';
 
@@ -60,17 +61,19 @@ function IntroSection() {
           dangerouslySetInnerHTML={{ __html: content.htmlContent }}
         />
 
-        <button
-          className={styles.ctaButton}
-          onClick={handleButtonClick}
-          aria-label={content.buttonText}
-        >
-          <svg className={styles.shopeeIcon} viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19.5 7h-15A1.5 1.5 0 003 8.5v10A1.5 1.5 0 004.5 20h15a1.5 1.5 0 001.5-1.5v-10A1.5 1.5 0 0019.5 7zM12 2.5c-1.5 0-2.7 1.2-2.7 2.7 0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7c0-1.5-1.2-2.7-2.7-2.7z"/>
-          </svg>
-          <span>{content.buttonText}</span>
-          <span className={styles.arrow}>→</span>
-        </button>
+        <div className={styles.buttonContainer}>
+          <button
+            className={styles.ctaButton}
+            onClick={handleButtonClick}
+            aria-label={content.buttonText}
+          >
+            <svg className={styles.shopeeIcon} viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.5 7h-15A1.5 1.5 0 003 8.5v10A1.5 1.5 0 004.5 20h15a1.5 1.5 0 001.5-1.5v-10A1.5 1.5 0 0019.5 7zM12 2.5c-1.5 0-2.7 1.2-2.7 2.7 0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7c0-1.5-1.2-2.7-2.7-2.7z"/>
+            </svg>
+            <span>{content.buttonText}</span>
+            <span className={styles.arrow}>→</span>
+          </button>
+        </div>
       </div>
     </section>
   );
