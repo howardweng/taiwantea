@@ -15,6 +15,7 @@ A modern, production-ready e-commerce platform for selling premium Taiwanese tea
 - **Image Preview** - Full-size modal view
 - **Accessibility** - WCAG 2.1 Level AA compliant
 - **Fast Performance** - Lazy loading & optimization
+- **SEO Optimized** - Meta tags, sitemap, structured data
 
 ### 👨‍💼 Admin Dashboard
 - **Secure Auth** - JWT authentication with bcrypt
@@ -106,6 +107,8 @@ GET  /api/categories             List all categories
 GET  /api/products               List products (with filters)
 GET  /api/products/{id}          Get product details
 GET  /api/health                 Health check
+GET  /api/sitemap.xml            Dynamic sitemap for SEO
+GET  /robots.txt                 Search engine directives
 ```
 
 ### Authentication
@@ -154,13 +157,41 @@ npm run test:coverage            # With coverage
 
 ## 🐳 Docker Deployment
 
+### Development
 ```bash
-# Development
 docker-compose up -d
-
-# Production
-docker-compose -f docker-compose.prod.yml up -d
 ```
+
+### Production (Docker Hub)
+
+**Full Deployment** (build → push → deploy):
+```bash
+./deploy-to-production.sh
+# or with version tag
+./deploy-to-production.sh v1.0.0
+```
+
+**Quick Deployment** (restart only):
+```bash
+./quick-deploy.sh
+```
+
+**Production URL:** https://taiwantea.frrut.com
+
+For detailed deployment guide, see [docs/DOCKER_HUB_DEPLOYMENT.md](docs/DOCKER_HUB_DEPLOYMENT.md)
+
+## 🔍 SEO Features
+
+✅ **robots.txt** - Search engine crawling directives
+✅ **Dynamic sitemap.xml** - Auto-generated with all products
+✅ **Meta tags** - Title, description, keywords
+✅ **Open Graph** - Social media sharing optimization
+✅ **Twitter Cards** - Twitter sharing optimization
+✅ **Schema.org** - Structured data (Organization, Product)
+✅ **Canonical URLs** - Duplicate content prevention
+✅ **Language tag** - zh-TW (Traditional Chinese)
+
+For SEO implementation guide, see [docs/SEO實施計劃.md](docs/SEO實施計劃.md)
 
 ## 📊 Performance Metrics
 
@@ -242,9 +273,11 @@ VITE_API_URL=http://localhost:8585
 
 ## 📚 Documentation
 
+- [Docker Hub Deployment](docs/DOCKER_HUB_DEPLOYMENT.md) - Production deployment guide
+- [SEO Implementation](docs/SEO實施計劃.md) - SEO optimization guide (中文)
 - [Implementation Status](docs/IMPLEMENTATION_STATUS.md) - Development progress
 - [Testing Guide](docs/TESTING.md) - Test documentation
-- [Production Guide](docs/PRODUCTION_READY.md) - Deployment
+- [Production Guide](docs/PRODUCTION_READY.md) - General deployment
 - [Progress Summary](docs/PROGRESS_SUMMARY.md) - Overall progress
 - [使用說明](docs/使用說明.md) - Chinese user guide
 - [Feature Spec](specs/001-i-wnat-to/spec.md) - Requirements
