@@ -2,7 +2,9 @@
  * Image utility functions
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8585';
+// In production, VITE_API_URL should be empty (same origin)
+// In development, it should be 'http://localhost:8585'
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 /**
  * Get the full image URL by prepending API URL to relative paths
@@ -17,9 +19,9 @@ export const getImageUrl = (imagePath) => {
     return imagePath;
   }
 
-  // If it's a relative path starting with /, prepend API_URL
+  // If it's a relative path starting with /, prepend API_URL if it exists
   if (imagePath.startsWith('/')) {
-    return `${API_URL}${imagePath}`;
+    return API_URL ? `${API_URL}${imagePath}` : imagePath;
   }
 
   // Otherwise, return as is
