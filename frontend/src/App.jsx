@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import LoginPage from './pages/admin/LoginPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -23,6 +24,7 @@ function App() {
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
           <Route
             path="/admin/dashboard"

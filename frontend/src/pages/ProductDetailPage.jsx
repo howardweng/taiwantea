@@ -1,0 +1,151 @@
+/**
+ * Product Detail Page
+ *
+ * Displays full product information with image gallery
+ */
+
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import ImageGallery from '../components/customer/ImageGallery';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import styles from './ProductDetailPage.module.css';
+
+function ProductDetailPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProduct();
+  }, [id]);
+
+  const fetchProduct = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Product not found');
+        }
+        throw new Error('Failed to load product');
+      }
+
+      const data = await response.json();
+      setProduct(data);
+    } catch (err) {
+      console.error('Error fetching product:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.errorContainer}>
+        <div className={styles.errorCard}>
+          <h2>Oops!</h2>
+          <p>{error}</p>
+          <button onClick={() => navigate('/')} className={styles.backButton}>
+            ← Back to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return null;
+  }
+
+  const badgeText = {
+    HOT: '熱門',
+    NEW: '新品',
+    SALE: '特價'
+  };
+
+  return (
+    <div className={styles.container}>
+      {/* Breadcrumb */}
+      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+        <Link to="/" className={styles.breadcrumbLink}>
+          首頁
+        </Link>
+        <span className={styles.breadcrumbSeparator}>/</span>
+        <span className={styles.breadcrumbCurrent}>{product.name}</span>
+      </nav>
+
+      {/* Product Content */}
+      <div className={styles.productContent}>
+        {/* Left Column - Image Gallery */}
+        <div className={styles.imageColumn}>
+          <ImageGallery images={product.images} productName={product.name} />
+        </div>
+
+        {/* Right Column - Product Info */}
+        <div className={styles.infoColumn}>
+          {/* Product Name */}
+          <h1 className={styles.productName}>
+            {product.name}
+            {product.badge && (
+              <span className={`${styles.badge} ${styles[`badge${product.badge}`]}`}>
+                {badgeText[product.badge] || product.badge}
+              </span>
+            )}
+          </h1>
+
+          {/* English Name */}
+          {product.englishName && (
+            <p className={styles.englishName}>{product.englishName}</p>
+          )}
+
+          {/* Price */}
+          <div className={styles.priceSection}>
+            <span className={styles.priceLabel}>價格：</span>
+            <span className={styles.price}>NT$ {product.price.toLocaleString()}</span>
+          </div>
+
+          {/* Divider */}
+          <hr className={styles.divider} />
+
+          {/* Description */}
+          <div className={styles.descriptionSection}>
+            <h2 className={styles.sectionTitle}>商品描述</h2>
+            <p className={styles.description}>{product.description}</p>
+          </div>
+
+          {/* Stock Status */}
+          <div className={styles.stockSection}>
+            {product.inStock ? (
+              <span className={styles.inStock}>✓ 現貨供應中</span>
+            ) : (
+              <span className={styles.outOfStock}>✗ 目前缺貨</span>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className={styles.actions}>
+            <button onClick={() => navigate('/')} className={styles.backButton}>
+              ← 返回商品列表
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ProductDetailPage;

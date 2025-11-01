@@ -7,6 +7,18 @@ from decimal import Decimal
 
 
 # ============================================
+# Product Image Schema
+# ============================================
+
+class ProductImage(BaseModel):
+    """Product image schema for multi-image support"""
+    url: str
+    thumbnailUrl: Optional[str] = None
+    displayOrder: int = 0
+    alt: Optional[str] = None
+
+
+# ============================================
 # Category Schemas
 # ============================================
 
@@ -45,6 +57,8 @@ class ProductResponse(BaseModel):
     thumbnailUrl: Optional[str] = None
     inStock: bool
     badge: Optional[str] = None  # Badge text: "HOT", "NEW", "SALE", or custom text
+    images: Optional[List[ProductImage]] = []  # Multi-image support (max 6)
+    detailContent: Optional[str] = ""  # Rich text HTML content for product detail page
 
     class Config:
         populate_by_name = True
@@ -82,6 +96,8 @@ class ProductCreateRequest(BaseModel):
     inStock: bool = True
     displayOrder: int = Field(default=999, ge=0)
     badge: Optional[str] = Field(None, max_length=20)  # Optional badge text (max 20 chars)
+    images: Optional[List[ProductImage]] = []  # Multi-image support (max 6)
+    detailContent: Optional[str] = ""  # Rich text HTML content
 
 
 class ProductUpdateRequest(BaseModel):
@@ -96,3 +112,5 @@ class ProductUpdateRequest(BaseModel):
     inStock: Optional[bool] = None
     displayOrder: Optional[int] = Field(None, ge=0)
     badge: Optional[str] = Field(None, max_length=20)  # Optional badge text
+    images: Optional[List[ProductImage]] = None  # Multi-image support (max 6)
+    detailContent: Optional[str] = None  # Rich text HTML content

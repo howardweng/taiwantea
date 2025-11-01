@@ -1,0 +1,128 @@
+/**
+ * Image Gallery Styles
+ */
+
+.container {
+  width: 100%;
+}
+
+/* Placeholder when no images */
+.placeholder {
+  aspect-ratio: 1;
+  background: var(--color-gray-100);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-500);
+}
+
+.placeholderIcon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.placeholder p {
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+/* Main Image */
+.mainImageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--color-border);
+}
+
+.mainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.mainImage:hover {
+  transform: scale(1.05);
+}
+
+/* Thumbnail Navigation */
+.thumbnailContainer {
+  width: 100%;
+  padding: var(--spacing-sm) 0;
+}
+
+.thumbnailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.thumbnail {
+  aspect-ratio: 1;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--color-white);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.thumbnail:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.thumbnailActive {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Image Counter */
+.imageCounter {
+  text-align: center;
+  color: var(--color-gray-600);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-sm);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .thumbnailGrid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: var(--spacing-xs);
+  }
+
+  .mainImage:hover {
+    transform: none;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .mainImage,
+  .thumbnail {
+    transition: none;
+  }
+
+  .mainImage:hover {
+    transform: none;
+  }
+
+  .thumbnail:hover {
+    transform: none;
+  }
+}

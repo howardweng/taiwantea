@@ -12,6 +12,7 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styles from './ProductCard.module.css';
 import ImageModal from './ImageModal';
@@ -21,6 +22,7 @@ import { getImageUrl } from '../../utils/imageUtils';
 function ProductCard({ product, categoryName, categoryEnglishName, shopeeStoreUrl = 'https://shopee.tw/' }) {
   const { id, name, category, description, price, imageUrl, thumbnailUrl, inStock, badge } = product;
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   // Use thumbnail for card display, full image for modal (with full backend URL)
   const displayImage = getImageUrl(thumbnailUrl || imageUrl);
@@ -39,7 +41,12 @@ function ProductCard({ product, categoryName, categoryEnglishName, shopeeStoreUr
     return badgeMap[badge] || badge;
   };
 
-  const handleImageClick = () => {
+  const handleCardClick = () => {
+    navigate(`/products/${id}`);
+  };
+
+  const handleImageClick = (e) => {
+    e.stopPropagation(); // Prevent card click
     setShowModal(true);
   };
 
@@ -52,6 +59,8 @@ function ProductCard({ product, categoryName, categoryEnglishName, shopeeStoreUr
       <article
         className={`${styles.card} ${!inStock ? styles.outOfStock : ''}`}
         aria-label={`${name} - ${formattedPrice}`}
+        onClick={handleCardClick}
+        style={{ cursor: 'pointer' }}
       >
         <div
           className={styles.imageContainer}

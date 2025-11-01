@@ -42,7 +42,13 @@ class ProductModel:
         db = get_database()
 
         try:
-            return await db.products.find_one({"_id": ObjectId(product_id)})
+            product = await db.products.find_one({"_id": ObjectId(product_id)})
+
+            # Sort images by displayOrder if present
+            if product and "images" in product and product["images"]:
+                product["images"] = sorted(product["images"], key=lambda x: x.get("displayOrder", 0))
+
+            return product
         except Exception:
             return None
 
