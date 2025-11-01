@@ -6,6 +6,7 @@ from ..models.product import ProductModel
 router = APIRouter(tags=["sitemap"])
 
 @router.get("/sitemap.xml")
+@router.head("/sitemap.xml")
 async def generate_sitemap():
     """
     動態生成 sitemap.xml
@@ -53,3 +54,24 @@ async def generate_sitemap():
         xml_content += '</urlset>'
 
         return Response(content=xml_content, media_type="application/xml")
+
+@router.get("/robots.txt")
+@router.head("/robots.txt")
+async def get_robots():
+    """
+    返回 robots.txt 檔案內容
+    """
+    robots_content = """User-agent: *
+Allow: /
+
+# 禁止索引管理員頁面
+Disallow: /admin/
+Disallow: /admin/*
+
+# 禁止索引 API 端點
+Disallow: /api/admin/
+
+# Sitemap 位置
+Sitemap: https://taiwantea.frrut.com/api/sitemap.xml
+"""
+    return Response(content=robots_content, media_type="text/plain")
