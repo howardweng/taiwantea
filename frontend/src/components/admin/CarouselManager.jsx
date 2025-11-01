@@ -14,6 +14,7 @@ import {
   deleteCarouselSlide
 } from '../../services/carouselService';
 import ImageUpload from './ImageUpload';
+import { getImageUrl } from '../../utils/imageUtils';
 import styles from './CarouselManager.module.css';
 
 function CarouselManager({ toast }) {
@@ -256,7 +257,7 @@ function CarouselManager({ toast }) {
                           >
                             ☰
                           </div>
-                          <img src={slide.imageUrl} alt={slide.title} className={styles.slideImage} />
+                          <img src={getImageUrl(slide.imageUrl)} alt={slide.title} className={styles.slideImage} />
                           <div className={styles.slideInfo}>
                             <h3>{slide.title}</h3>
                             <p>{slide.subtitle}</p>
