@@ -141,6 +141,7 @@ ProductCard.propTypes = {
     price: PropTypes.number.isRequired,
     imageUrl: PropTypes.string.isRequired,
     thumbnailUrl: PropTypes.string,
+    smImageUrl: PropTypes.string,  // Small image URL from media server
     inStock: PropTypes.bool.isRequired,
     badge: PropTypes.string,  // Optional badge text
   }).isRequired,

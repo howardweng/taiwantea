@@ -100,6 +100,45 @@
   color: var(--color-text-secondary);
 }
 
+/* Password Field Wrapper */
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.passwordWrapper .input {
+  padding-right: 48px; /* Make room for toggle button */
+}
+
+.togglePassword {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--color-text-secondary);
+  outline: none;
+}
+
+.togglePassword:hover {
+  color: var(--color-text);
+}
+
+.togglePassword:focus {
+  outline: none;
+}
+
+.togglePassword svg {
+  display: block;
+}
+
 .button {
   width: 100%;
   padding: var(--spacing-md);

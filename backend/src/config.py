@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     MAX_FILE_SIZE: int = 5242880  # 5MB
     ALLOWED_IMAGE_TYPES: str = "image/jpeg,image/png,image/webp"
 
+    # Media Server
+    MEDIA_SERVER_URL: str = "https://mediaserver.frrut.com"
+    MEDIA_SERVER_UPLOAD_ENDPOINT: str = "/uploadPic/taiwantea"
+
     @property
     def cors_origins(self) -> List[str]:
         """Parse ALLOWED_ORIGINS into a list"""
