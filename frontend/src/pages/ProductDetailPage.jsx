@@ -9,18 +9,32 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import ImageGallery from '../components/customer/ImageGallery';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import Navigation from '../components/layout/Navigation';
+import api from '../services/api';
 import styles from './ProductDetailPage.module.css';
 
 function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchProduct();
+    fetchCategories();
   }, [id]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get('/api/categories');
+      setCategories(response.data || []);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setCategories([]);
+    }
+  };
 
   const fetchProduct = async () => {
     try {
@@ -79,9 +93,13 @@ function ProductDetailPage() {
   };
 
   return (
-    <div className={styles.container}>
-      {/* Breadcrumb */}
-      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+    <>
+      {/* Navigation Header */}
+      <Navigation categories={categories} />
+
+      <div className={styles.container}>
+        {/* Breadcrumb */}
+        <nav className={styles.breadcrumb} aria-label="Breadcrumb">
         <Link to="/" className={styles.breadcrumbLink}>
           首頁
         </Link>
@@ -161,7 +179,8 @@ function ProductDetailPage() {
           />
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 
