@@ -165,9 +165,14 @@
   font-size: var(--font-size-base);
 }
 
-/* Rich Text Detail Content Section */
+/* Rich Text Detail Content Section - Full Width Below Product Info */
 .detailContentSection {
-  margin-bottom: var(--spacing-xl);
+  margin-top: var(--spacing-3xl);
+  margin-bottom: var(--spacing-2xl);
+  padding: var(--spacing-2xl);
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .richTextContent {

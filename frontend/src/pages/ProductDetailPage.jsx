@@ -128,22 +128,6 @@ function ProductDetailPage() {
             <p className={styles.description}>{product.description}</p>
           </div>
 
-          {/* Rich Text Detail Content */}
-          {product.detailContent && product.detailContent.trim() !== '' && product.detailContent !== '<p><br></p>' && (
-            <div className={styles.detailContentSection}>
-              <h2 className={styles.sectionTitle}>詳細介紹</h2>
-              <div
-                className={styles.richTextContent}
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(product.detailContent, {
-                    ALLOWED_TAGS: ['h2', 'h3', 'p', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'a', 'img', 'br'],
-                    ALLOWED_ATTR: ['href', 'src', 'alt', 'target', 'rel', 'style', 'class']
-                  })
-                }}
-              />
-            </div>
-          )}
-
           {/* Stock Status */}
           <div className={styles.stockSection}>
             {product.inStock ? (
@@ -161,6 +145,22 @@ function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Rich Text Detail Content - Full Width Below Product Info */}
+      {product.detailContent && product.detailContent.trim() !== '' && product.detailContent !== '<p><br></p>' && (
+        <div className={styles.detailContentSection}>
+          <h2 className={styles.sectionTitle}>詳細介紹</h2>
+          <div
+            className={styles.richTextContent}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(product.detailContent, {
+                ALLOWED_TAGS: ['h2', 'h3', 'p', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'a', 'img', 'br'],
+                ALLOWED_ATTR: ['href', 'src', 'alt', 'target', 'rel', 'style', 'class']
+              })
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
