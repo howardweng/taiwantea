@@ -11,6 +11,7 @@ function CategoryForm({ category, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     id: '',
     name: '',
+    englishName: '',
     description: '',
     displayOrder: 999,
   });
@@ -24,6 +25,7 @@ function CategoryForm({ category, onSubmit, onCancel }) {
       setFormData({
         id: category.id || '',
         name: category.name || '',
+        englishName: category.englishName || '',
         description: category.description || '',
         displayOrder: category.displayOrder || 999,
       });
@@ -83,7 +85,7 @@ function CategoryForm({ category, onSubmit, onCancel }) {
     try {
       // For editing, don't send the ID field
       const submitData = category
-        ? { name: formData.name, description: formData.description, displayOrder: formData.displayOrder }
+        ? { name: formData.name, englishName: formData.englishName, description: formData.description, displayOrder: formData.displayOrder }
         : formData;
 
       await onSubmit(submitData);
@@ -126,7 +128,7 @@ function CategoryForm({ category, onSubmit, onCancel }) {
 
         <div className={styles.formGroup}>
           <label htmlFor="name" className={styles.label}>
-            分類名稱 *
+            分類名稱（中文）*
           </label>
           <input
             type="text"
@@ -136,9 +138,28 @@ function CategoryForm({ category, onSubmit, onCancel }) {
             onChange={handleChange}
             disabled={isSubmitting}
             className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-            placeholder="例如: 綠茶"
+            placeholder="例如: 優選綠茶"
           />
           {errors.name && <span className={styles.fieldError}>{errors.name}</span>}
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="englishName" className={styles.label}>
+            English Name (Optional)
+          </label>
+          <input
+            type="text"
+            id="englishName"
+            name="englishName"
+            value={formData.englishName}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            className={styles.input}
+            placeholder="e.g., Green Tea"
+          />
+          <small className={styles.helpText}>
+            English translation of the category name (optional)
+          </small>
         </div>
 
         <div className={styles.formGroup}>

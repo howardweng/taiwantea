@@ -123,7 +123,8 @@ function Navigation({ categories }) {
                 className={styles.navLink}
                 aria-label={`Go to ${category.name} section`}
               >
-                {category.name}
+                <span className={styles.navLinkChinese}>{category.name}</span>
+                {category.englishName && <span className={styles.navLinkEnglish}>{category.englishName}</span>}
               </button>
             </li>
           ))}

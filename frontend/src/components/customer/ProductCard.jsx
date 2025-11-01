@@ -18,7 +18,7 @@ import ImageModal from './ImageModal';
 import ShopeeIcon from './ShopeeIcon';
 import { getImageUrl } from '../../utils/imageUtils';
 
-function ProductCard({ product, shopeeStoreUrl = 'https://shopee.tw/' }) {
+function ProductCard({ product, categoryName, categoryEnglishName, shopeeStoreUrl = 'https://shopee.tw/' }) {
   const { id, name, category, description, price, imageUrl, thumbnailUrl, inStock, badge } = product;
   const [showModal, setShowModal] = useState(false);
 
@@ -91,8 +91,8 @@ function ProductCard({ product, shopeeStoreUrl = 'https://shopee.tw/' }) {
       <div className={styles.content}>
         <h3 className={styles.name} title={name}>{name}</h3>
 
-        <p className={styles.category} aria-label={`Category: ${category}`} title={category}>
-          {category}
+        <p className={styles.category} aria-label={`Category: ${categoryEnglishName || categoryName || category}`} title={categoryEnglishName || categoryName || category}>
+          {categoryEnglishName || categoryName || category}
         </p>
 
         <p className={styles.description} title={description}>{description}</p>
@@ -145,6 +145,8 @@ ProductCard.propTypes = {
     inStock: PropTypes.bool.isRequired,
     badge: PropTypes.string,  // Optional badge text
   }).isRequired,
+  categoryName: PropTypes.string,
+  categoryEnglishName: PropTypes.string,
   shopeeStoreUrl: PropTypes.string,
 };
 

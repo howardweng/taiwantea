@@ -13,7 +13,7 @@ import ProductCard from './ProductCard';
 import styles from './CategorySection.module.css';
 
 function CategorySection({ category, products, isAlternate = false, shopeeStoreUrl = 'https://shopee.tw/' }) {
-  const { id, name, description, imageUrl } = category;
+  const { id, name, englishName, description, imageUrl } = category;
 
   // Create anchor ID from category ID (e.g., "green-tea")
   const anchorId = id;
@@ -51,7 +51,12 @@ function CategorySection({ category, products, isAlternate = false, shopeeStoreU
           <div className={styles.grid} role="list">
             {products.map((product) => (
               <div key={product.id} role="listitem">
-                <ProductCard product={product} shopeeStoreUrl={shopeeStoreUrl} />
+                <ProductCard
+                  product={product}
+                  categoryName={name}
+                  categoryEnglishName={englishName}
+                  shopeeStoreUrl={shopeeStoreUrl}
+                />
               </div>
             ))}
           </div>
@@ -69,6 +74,7 @@ CategorySection.propTypes = {
   category: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    englishName: PropTypes.string,
     description: PropTypes.string,
     imageUrl: PropTypes.string,
   }).isRequired,

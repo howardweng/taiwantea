@@ -31,49 +31,64 @@ async def seed_database():
     categories = [
         {
             "_id": "green-tea",
-            "name": "綠茶",
-            "description": "來自中國和日本的清新、細緻綠茶。富含抗氧化劑，帶有植物、草本香氣。",
+            "name": "優選綠茶",
+            "englishName": "Green Tea",
+            "description": "清新、細緻綠茶。，帶有植物草本香氣。",
             "displayOrder": 1,
-            "isActive": True,
-            "createdAt": datetime.utcnow()
-        },
-        {
-            "_id": "black-tea",
-            "name": "紅茶",
-            "description": "濃郁醇厚的全發酵茶，帶有豐富的麥芽風味。適合早晨或下午品飲。",
-            "displayOrder": 2,
             "isActive": True,
             "createdAt": datetime.utcnow()
         },
         {
             "_id": "oolong-tea",
             "name": "烏龍茶",
-            "description": "來自台灣和中國的半發酵茶。複雜風味從花香到焙火香皆有。",
+            "englishName": "Oolong Tea",
+            "description": "來自台灣工藝極品茶。風味從花香到焙火香皆有。",
+            "displayOrder": 2,
+            "isActive": True,
+            "createdAt": datetime.utcnow()
+        },
+        {
+            "_id": "black-tea",
+            "name": "紅茶",
+            "englishName": "Black Tea",
+            "description": "濃郁醇厚的全發酵茶，帶有豐富的蜜香層次風味。適合早晨或下午品飲。",
             "displayOrder": 3,
             "isActive": True,
             "createdAt": datetime.utcnow()
         },
         {
             "_id": "white-tea",
-            "name": "白茶",
-            "description": "最少加工的精緻茶品，帶有細膩甜美的風味。抗氧化劑含量最高。",
+            "name": "白茶-珍品",
+            "englishName": "White Tea",
+            "description": "加工最少的精緻茶品，帶有葉子吸取太陽的不可言喻風味。",
             "displayOrder": 4,
             "isActive": True,
             "createdAt": datetime.utcnow()
         },
         {
             "_id": "herbal-tea",
-            "name": "花草茶",
-            "description": "無咖啡因的草本、花卉和水果沖泡飲品。舒緩且芳香。",
+            "name": "工藝窨花茶",
+            "englishName": None,
+            "description": "茶裡有花 花裡有茶, 合一雅香令人驚艷",
             "displayOrder": 5,
             "isActive": True,
             "createdAt": datetime.utcnow()
         },
         {
-            "_id": "puerh-tea",
-            "name": "普洱茶",
-            "description": "來自中國雲南的陳年發酵茶。土壤香氣，口感順滑，越陳越香。",
+            "_id": "box",
+            "name": "茶葉禮盒",
+            "englishName": None,
+            "description": "不論是年節送禮或商務出差,茶禮體面又大方",
             "displayOrder": 6,
+            "isActive": True,
+            "createdAt": datetime.utcnow()
+        },
+        {
+            "_id": "cup",
+            "name": "茶具週邊",
+            "englishName": None,
+            "description": "古典東方文化韻味風格",
+            "displayOrder": 7,
             "isActive": True,
             "createdAt": datetime.utcnow()
         }

@@ -14,6 +14,7 @@ class CategoryResponse(BaseModel):
     """Category response schema"""
     id: str = Field(..., alias="_id")
     name: str
+    englishName: Optional[str] = None
     description: Optional[str] = None
     displayOrder: int
     imageUrl: Optional[str] = None
@@ -36,6 +37,7 @@ class ProductResponse(BaseModel):
     """Public product response (customer-facing)"""
     id: str = Field(..., alias="_id")
     name: str
+    englishName: Optional[str] = None
     category: str
     description: str
     price: float
@@ -71,6 +73,7 @@ class ProductList(BaseModel):
 class ProductCreateRequest(BaseModel):
     """Create product request"""
     name: str = Field(..., min_length=1, max_length=200)
+    englishName: Optional[str] = Field(None, max_length=200)
     category: str = Field(..., min_length=1)
     description: str = Field(..., min_length=10, max_length=5000)
     price: float = Field(..., ge=0)
@@ -84,6 +87,7 @@ class ProductCreateRequest(BaseModel):
 class ProductUpdateRequest(BaseModel):
     """Update product request"""
     name: Optional[str] = Field(None, min_length=1, max_length=200)
+    englishName: Optional[str] = Field(None, max_length=200)
     category: Optional[str] = None
     description: Optional[str] = Field(None, min_length=10, max_length=5000)
     price: Optional[float] = Field(None, ge=0)

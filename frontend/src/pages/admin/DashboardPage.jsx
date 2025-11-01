@@ -340,7 +340,11 @@ function DashboardPage() {
                     return (
                       <div key={category.id} className={styles.categoryGroup}>
                         <h3 className={styles.categoryTitle}>
-                          {category.name} ({categoryProducts.length})
+                          {category.name}
+                          {category.englishName && (
+                            <span className={styles.categoryEnglishTitle}> • {category.englishName}</span>
+                          )}
+                          {' '}({categoryProducts.length})
                         </h3>
                         <DragDropContext onDragEnd={(result) => handleProductDragEnd(result, category.id)}>
                           <Droppable droppableId={`category-${category.id}`}>
@@ -380,8 +384,18 @@ function DashboardPage() {
                                             className={styles.productImage}
                                           />
                                           <div>
-                                            <div className={styles.productName}>{product.name}</div>
-                                            <div className={styles.productCategory}>{category.name}</div>
+                                            <div className={styles.productName}>
+                                              {product.name}
+                                              {product.englishName && (
+                                                <span className={styles.englishName}> • {product.englishName}</span>
+                                              )}
+                                            </div>
+                                            <div className={styles.productCategory}>
+                                              {category.name}
+                                              {category.englishName && (
+                                                <span className={styles.categoryEnglishName}> ({category.englishName})</span>
+                                              )}
+                                            </div>
                                           </div>
                                         </div>
                                         <div className={styles.productPrice}>NT${product.price}</div>
@@ -478,7 +492,12 @@ function DashboardPage() {
                               </div>
                               <div className={styles.categoryCardMain}>
                                 <div className={styles.categoryCardContent}>
-                                  <h3>{category.name}</h3>
+                                  <h3>
+                                    {category.name}
+                                    {category.englishName && (
+                                      <span className={styles.categoryEnglishTitle}> • {category.englishName}</span>
+                                    )}
+                                  </h3>
                                   <p>{category.description}</p>
                                   <div className={styles.categoryMeta}>
                                     顯示順序: {category.displayOrder} |

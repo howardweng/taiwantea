@@ -11,6 +11,7 @@ import styles from './ProductForm.module.css';
 function ProductForm({ product, categories, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     name: '',
+    englishName: '',
     category: '',
     description: '',
     price: '',
@@ -29,6 +30,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
     if (product) {
       setFormData({
         name: product.name || '',
+        englishName: product.englishName || '',
         category: product.category || '',
         description: product.description || '',
         price: product.price || '',
@@ -122,7 +124,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
 
         <div className={styles.formGroup}>
           <label htmlFor="name" className={styles.label}>
-            商品名稱 *
+            商品名稱（中文）*
           </label>
           <input
             type="text"
@@ -132,8 +134,28 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
             onChange={handleChange}
             className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
             disabled={isSubmitting}
+            placeholder="例如: 龍井綠茶(珍品量少)"
           />
           {errors.name && <span className={styles.fieldError}>{errors.name}</span>}
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="englishName" className={styles.label}>
+            English Name (Optional)
+          </label>
+          <input
+            type="text"
+            id="englishName"
+            name="englishName"
+            value={formData.englishName}
+            onChange={handleChange}
+            className={styles.input}
+            disabled={isSubmitting}
+            placeholder="e.g., Taiwan Longjing Green Tea"
+          />
+          <small className={styles.helpText}>
+            English translation of the product name (optional)
+          </small>
         </div>
 
         <div className={styles.formGroup}>
