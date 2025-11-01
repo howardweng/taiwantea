@@ -16,13 +16,15 @@ import PropTypes from 'prop-types';
 import styles from './ProductCard.module.css';
 import ImageModal from './ImageModal';
 import ShopeeIcon from './ShopeeIcon';
+import { getImageUrl } from '../../utils/imageUtils';
 
-function ProductCard({ product, shopeeStoreUrl }) {
+function ProductCard({ product, shopeeStoreUrl = 'https://shopee.tw/' }) {
   const { id, name, category, description, price, imageUrl, thumbnailUrl, inStock, badge } = product;
   const [showModal, setShowModal] = useState(false);
 
-  // Use thumbnail for card display, full image for modal
-  const displayImage = thumbnailUrl || imageUrl;
+  // Use thumbnail for card display, full image for modal (with full backend URL)
+  const displayImage = getImageUrl(thumbnailUrl || imageUrl);
+  const fullImageUrl = getImageUrl(imageUrl);
 
   // Format price to 2 decimal places
   const formattedPrice = `NT$${price.toFixed(2)}`;
@@ -121,7 +123,7 @@ function ProductCard({ product, shopeeStoreUrl }) {
 
       {showModal && (
         <ImageModal
-          imageUrl={imageUrl}
+          imageUrl={fullImageUrl}
           alt={name}
           onClose={handleCloseModal}
         />
@@ -143,10 +145,6 @@ ProductCard.propTypes = {
     badge: PropTypes.string,  // Optional badge text
   }).isRequired,
   shopeeStoreUrl: PropTypes.string,
-};
-
-ProductCard.defaultProps = {
-  shopeeStoreUrl: 'https://shopee.tw/',
 };
 
 export default ProductCard;

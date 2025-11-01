@@ -19,6 +19,7 @@ import BackToTop from '../components/layout/BackToTop';
 import HeroCarousel from '../components/customer/HeroCarousel';
 import IntroSection from '../components/customer/IntroSection';
 import api from '../services/api';
+import { getImageUrl } from '../utils/imageUtils';
 import styles from './HomePage.module.css';
 
 function HomePage() {
@@ -53,7 +54,7 @@ function HomePage() {
   };
 
   const heroSlides = carouselSlides.map(slide => ({
-    image: slide.imageUrl,
+    image: getImageUrl(slide.imageUrl),
     title: slide.title,
     subtitle: slide.subtitle,
     cta: {

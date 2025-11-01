@@ -14,7 +14,13 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import ErrorMessage from '../common/ErrorMessage';
 import styles from './ProductGrid.module.css';
 
-function ProductGrid({ categories, products, loading, error, shopeeStoreUrl }) {
+function ProductGrid({
+  categories = [],
+  products = [],
+  loading = false,
+  error = null,
+  shopeeStoreUrl = 'https://shopee.tw/'
+}) {
   if (loading) {
     return (
       <div className={styles.container}>
@@ -97,14 +103,6 @@ ProductGrid.propTypes = {
   loading: PropTypes.bool,
   error: PropTypes.string,
   shopeeStoreUrl: PropTypes.string,
-};
-
-ProductGrid.defaultProps = {
-  categories: [],
-  products: [],
-  loading: false,
-  error: null,
-  shopeeStoreUrl: 'https://shopee.tw/',
 };
 
 export default ProductGrid;

@@ -32,8 +32,10 @@ api.interceptors.response.use(
   (error) => {
     // Handle errors globally
     if (error.response?.status === 401) {
-      // Unauthorized - could redirect to login
-      console.error('Unauthorized access');
+      // Ignore 401 errors from /auth/me (it's just checking login status)
+      if (!error.config?.url?.includes('/auth/me')) {
+        console.error('Unauthorized access');
+      }
     }
     return Promise.reject(error);
   }
