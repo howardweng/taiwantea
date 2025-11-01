@@ -5,11 +5,14 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import api from '../../services/api';
 import styles from './Navigation.module.css';
 
 function Navigation({ categories }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [siteSettings, setSiteSettings] = useState(null);
@@ -45,28 +48,43 @@ function Navigation({ categories }) {
 
   // Smooth scroll to category section
   const scrollToCategory = (categoryId) => {
-    const element = document.getElementById(categoryId);
-    if (element) {
-      const offset = 80; // Height of sticky nav
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+    // Check if we're on the homepage
+    if (location.pathname === '/') {
+      // We're on homepage, scroll to section
+      const element = document.getElementById(categoryId);
+      if (element) {
+        const offset = 80; // Height of sticky nav
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
 
-      // Close mobile menu after navigation
+        // Close mobile menu after navigation
+        setIsMenuOpen(false);
+      }
+    } else {
+      // We're on another page, navigate to homepage with hash
+      navigate(`/#${categoryId}`);
       setIsMenuOpen(false);
     }
   };
 
   // Scroll to top
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    // Check if we're on the homepage
+    if (location.pathname === '/') {
+      // We're on homepage, scroll to top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      // We're on another page, navigate to homepage
+      navigate('/');
+    }
     setIsMenuOpen(false);
   };
 

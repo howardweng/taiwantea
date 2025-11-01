@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import useProducts from '../hooks/useProducts';
 import useCarousel from '../hooks/useCarousel';
 import Navigation from '../components/layout/Navigation';
@@ -23,6 +24,7 @@ import { getImageUrl } from '../utils/imageUtils';
 import styles from './HomePage.module.css';
 
 function HomePage() {
+  const location = useLocation();
   const { categories, products, loading, error } = useProducts();
   const { slides: carouselSlides, loading: carouselLoading } = useCarousel();
   const [siteSettings, setSiteSettings] = useState(null);
@@ -41,6 +43,33 @@ function HomePage() {
     };
     fetchSiteSettings();
   }, []);
+
+  // Handle hash navigation from other pages
+  useEffect(() => {
+    // Wait for content to load before scrolling
+    if (loading || categories.length === 0) return;
+
+    const hash = location.hash;
+    if (hash) {
+      // Remove the # to get the category ID
+      const categoryId = hash.substring(1);
+
+      // Use setTimeout to ensure DOM is ready
+      setTimeout(() => {
+        const element = document.getElementById(categoryId);
+        if (element) {
+          const offset = 80; // Height of sticky nav
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }
+  }, [location.hash, loading, categories]);
 
   // Scroll to products section
   const scrollToProducts = () => {
