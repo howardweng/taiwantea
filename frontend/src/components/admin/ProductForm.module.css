@@ -398,6 +398,40 @@
   display: none;
 }
 
+/* Rich Text Editor (Quill) Styles */
+.quillWrapper {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-white);
+}
+
+.quillEditor {
+  min-height: 300px;
+}
+
+.quillEditor :global(.ql-container) {
+  min-height: 250px;
+  font-size: var(--font-size-base);
+}
+
+.quillEditor :global(.ql-editor) {
+  min-height: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.quillEditor :global(.ql-editor.ql-blank::before) {
+  color: var(--color-gray-400);
+  font-style: normal;
+}
+
+.quillEditor :global(.ql-toolbar) {
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .imagesGrid {
@@ -407,5 +441,9 @@
 
   .imageActions {
     opacity: 1; /* Always show on mobile */
+  }
+
+  .quillEditor :global(.ql-editor) {
+    min-height: 200px;
   }
 }

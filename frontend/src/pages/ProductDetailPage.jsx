@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import ImageGallery from '../components/customer/ImageGallery';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import styles from './ProductDetailPage.module.css';
@@ -126,6 +127,22 @@ function ProductDetailPage() {
             <h2 className={styles.sectionTitle}>商品描述</h2>
             <p className={styles.description}>{product.description}</p>
           </div>
+
+          {/* Rich Text Detail Content */}
+          {product.detailContent && product.detailContent.trim() !== '' && product.detailContent !== '<p><br></p>' && (
+            <div className={styles.detailContentSection}>
+              <h2 className={styles.sectionTitle}>詳細介紹</h2>
+              <div
+                className={styles.richTextContent}
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(product.detailContent, {
+                    ALLOWED_TAGS: ['h2', 'h3', 'p', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'a', 'img', 'br'],
+                    ALLOWED_ATTR: ['href', 'src', 'alt', 'target', 'rel', 'style', 'class']
+                  })
+                }}
+              />
+            </div>
+          )}
 
           {/* Stock Status */}
           <div className={styles.stockSection}>

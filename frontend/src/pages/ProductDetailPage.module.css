@@ -165,6 +165,74 @@
   font-size: var(--font-size-base);
 }
 
+/* Rich Text Detail Content Section */
+.detailContentSection {
+  margin-bottom: var(--spacing-xl);
+}
+
+.richTextContent {
+  line-height: 1.8;
+  color: var(--color-text);
+}
+
+.richTextContent h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: var(--spacing-lg) 0 var(--spacing-md);
+  color: var(--color-text);
+}
+
+.richTextContent h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+  color: var(--color-text);
+}
+
+.richTextContent p {
+  margin: var(--spacing-sm) 0;
+  font-size: var(--font-size-base);
+}
+
+.richTextContent ul,
+.richTextContent ol {
+  margin: var(--spacing-sm) 0;
+  padding-left: var(--spacing-xl);
+}
+
+.richTextContent li {
+  margin: var(--spacing-xs) 0;
+}
+
+.richTextContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  margin: var(--spacing-md) 0;
+  display: block;
+}
+
+.richTextContent a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.richTextContent a:hover {
+  color: var(--color-primary-dark);
+}
+
+.richTextContent strong {
+  font-weight: 600;
+}
+
+.richTextContent em {
+  font-style: italic;
+}
+
+.richTextContent u {
+  text-decoration: underline;
+}
+
 /* Stock Section */
 .stockSection {
   margin-bottom: var(--spacing-xl);

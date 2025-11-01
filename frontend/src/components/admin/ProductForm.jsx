@@ -4,7 +4,9 @@
  * Form for creating and editing products
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import ImageUpload from './ImageUpload';
 import styles from './ProductForm.module.css';
 
@@ -27,6 +29,7 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState({ url: '', thumbnailUrl: '' });
+  const quillRef = useRef(null);
 
   // Populate form if editing existing product
   useEffect(() => {
@@ -156,6 +159,69 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
       }));
     }
   };
+
+  // Image upload handler for Quill editor
+  const handleQuillImageUpload = useCallback(() => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/upload/image`, {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error('Upload failed');
+          }
+
+          const data = await response.json();
+          const imageUrl = data.url;
+
+          // Insert image into editor
+          const quill = quillRef.current.getEditor();
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', imageUrl);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          alert('圖片上傳失敗');
+        }
+      }
+    };
+  }, []);
+
+  // Quill modules configuration
+  const quillModules = {
+    toolbar: {
+      container: [
+        [{ 'header': [2, 3, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'color': [] }],
+        ['link', 'image'],
+        ['clean']
+      ],
+      handlers: {
+        image: handleQuillImageUpload
+      }
+    }
+  };
+
+  const quillFormats = [
+    'header',
+    'bold', 'italic', 'underline',
+    'list', 'bullet',
+    'color',
+    'link', 'image'
+  ];
 
   const validate = () => {
     const newErrors = {};
@@ -452,6 +518,33 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
 
           <p className={styles.helpText}>
             ℹ️ 第一張圖片將作為主圖顯示在商品列表中。可上傳最多 6 張圖片。
+          </p>
+        </div>
+
+        {/* Rich Text Editor Section */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            詳細介紹（富文本編輯器）
+          </label>
+          <div className={styles.quillWrapper}>
+            <ReactQuill
+              ref={quillRef}
+              theme="snow"
+              value={formData.detailContent}
+              onChange={(content) => {
+                setFormData(prev => ({
+                  ...prev,
+                  detailContent: content
+                }));
+              }}
+              modules={quillModules}
+              formats={quillFormats}
+              placeholder="輸入商品的詳細介紹，可以插入圖片、標題、列表等..."
+              className={styles.quillEditor}
+            />
+          </div>
+          <p className={styles.helpText}>
+            ℹ️ 使用工具列格式化文字，可以插入圖片、標題、列表等。此內容將顯示在商品詳情頁。
           </p>
         </div>
 
