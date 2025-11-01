@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# 禁止索引管理員頁面
+Disallow: /admin/
+Disallow: /admin/*
+
+# 禁止索引 API 端點
+Disallow: /api/
+
+# Sitemap 位置
+Sitemap: https://taiwantea.frrut.com/sitemap.xml

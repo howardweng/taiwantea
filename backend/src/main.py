@@ -8,7 +8,7 @@ import traceback
 
 from src.config import settings
 from src.database import connect_to_mongo, close_mongo_connection
-from src.routers import auth, products, admin_products, admin_categories, upload, carousel, admin_carousel, intro_section, admin_intro_section, site_settings, admin_site_settings
+from src.routers import auth, products, admin_products, admin_categories, upload, carousel, admin_carousel, intro_section, admin_intro_section, site_settings, admin_site_settings, sitemap
 from src.logger import logger
 from src.middleware.logging import add_logging_middleware
 from src.middleware.rate_limit import add_rate_limiting
@@ -100,6 +100,7 @@ app.include_router(admin_carousel.router, prefix="/api/admin", tags=["Admin - Ca
 app.include_router(admin_intro_section.router, prefix="/api/admin", tags=["Admin - Intro Section"])
 app.include_router(admin_site_settings.router, prefix="/api/admin", tags=["Admin - Site Settings"])
 app.include_router(upload.router, prefix="/api", tags=["Upload"])
+app.include_router(sitemap.router, prefix="/api", tags=["SEO"])
 
 
 # Root endpoint

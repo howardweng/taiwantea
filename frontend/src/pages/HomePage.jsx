@@ -44,6 +44,39 @@ function HomePage() {
     fetchSiteSettings();
   }, []);
 
+  // Add organization structured data (Schema.org) for SEO
+  useEffect(() => {
+    const organizationData = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "台灣茗茶大師 TeaMaster",
+      "url": "https://taiwantea.frrut.com",
+      "logo": "https://taiwantea.frrut.com/tea-logo.png",
+      "description": "提供100%台灣高山茶葉，包括烏龍茶、紅茶、白茶、綠茶及茶葉禮盒。手工採摘，天然無添加，品質保證。",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "TW",
+        "addressLocality": "台灣"
+      },
+      "sameAs": []
+    };
+
+    // Create script tag and add to head
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(organizationData);
+    script.id = 'organization-structured-data';
+    document.head.appendChild(script);
+
+    // Cleanup function
+    return () => {
+      const oldScript = document.getElementById('organization-structured-data');
+      if (oldScript) {
+        document.head.removeChild(oldScript);
+      }
+    };
+  }, []);
+
   // Handle hash navigation from other pages
   useEffect(() => {
     // Wait for content to load before scrolling

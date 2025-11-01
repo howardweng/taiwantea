@@ -26,6 +26,62 @@ function ProductDetailPage() {
     fetchCategories();
   }, [id]);
 
+  // Add structured data (Schema.org) for SEO
+  useEffect(() => {
+    if (!product) return;
+
+    // Create structured data for product
+    const structuredData = {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": product.name,
+      "image": product.images || [],
+      "description": product.description || product.name,
+      "brand": {
+        "@type": "Brand",
+        "name": "台灣茗茶大師 TeaMaster"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": `https://taiwantea.frrut.com/products/${product._id}`,
+        "priceCurrency": "TWD",
+        "price": product.price,
+        "availability": product.inStock
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock"
+      }
+    };
+
+    // Create script tag and add to head
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    script.id = 'product-structured-data';
+    document.head.appendChild(script);
+
+    // Update page title and meta description
+    document.title = `${product.name} - 台灣茗茶大師 TeaMaster`;
+
+    // Update or create meta description
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.name = 'description';
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.content = `${product.description || product.name} - NT$ ${product.price.toLocaleString()}。100%台灣高山茶葉，手工採摘，天然無添加。`;
+
+    // Cleanup function to remove script when component unmounts
+    return () => {
+      const oldScript = document.getElementById('product-structured-data');
+      if (oldScript) {
+        document.head.removeChild(oldScript);
+      }
+      // Reset title to default
+      document.title = '台灣茗茶大師 TeaMaster - 精選台灣高山茶｜烏龍茶、紅茶、綠茶';
+    };
+  }, [product]);
+
   const fetchCategories = async () => {
     try {
       const categoriesData = await getCategories();
