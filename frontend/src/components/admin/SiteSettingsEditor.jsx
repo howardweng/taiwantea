@@ -191,8 +191,8 @@ function SiteSettingsEditor({ toast }) {
           <div className={styles.formGroup}>
             <label className={styles.label}>Logo 圖片</label>
             <ImageUpload
-              onUploadSuccess={handleImageUpload}
-              currentImageUrl={formData.logoImageUrl}
+              onChange={handleImageUpload}
+              value={formData.logoImageUrl}
               hideUrlInput={true}
             />
             <span className={styles.helpText}>
