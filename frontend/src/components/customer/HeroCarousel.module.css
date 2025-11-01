@@ -262,6 +262,21 @@
     min-height: 400px;
   }
 
+  /* Very light overlay on mobile for maximum image visibility */
+  .overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.15) 0%,
+      rgba(0, 0, 0, 0.25) 50%,
+      rgba(0, 0, 0, 0.35) 100%
+    );
+  }
+
+  /* Adjust background position for better framing on mobile */
+  .slide {
+    background-position: center center;
+  }
+
   .content {
     padding: var(--spacing-xl);
   }

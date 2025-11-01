@@ -63,10 +63,10 @@
   margin: 0 auto;
 }
 
-/* Product Grid - JSY Pattern: 4 columns desktop, 3 tablet, 2 mobile */
+/* Product Grid - JSY Pattern: 4 columns desktop, 3 tablet, 2 mobile, 1 small mobile */
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Default: 2 columns (mobile) */
+  grid-template-columns: 1fr; /* Default: 1 column (small mobile) */
   gap: 20px; /* JSY Pattern: 20px gap */
 }
 
@@ -80,10 +80,10 @@
 
 /* Responsive Design - JSY Pattern */
 
-/* Tablet: 3 columns (480px - 768px) */
+/* Small Mobile to Large Mobile: 2 columns (480px - 768px) */
 @media (min-width: 480px) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
