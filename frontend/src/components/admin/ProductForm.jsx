@@ -4,7 +4,7 @@
  * Form for creating and editing products
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ImageUpload from './ImageUpload';
 import styles from './ProductForm.module.css';
 
@@ -20,10 +20,13 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
     inStock: true,
     displayOrder: 999,
     badge: '',  // Badge text field
+    images: [],  // Multi-image support (max 6)
+    detailContent: '',  // Rich text HTML content
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState({ url: '', thumbnailUrl: '' });
 
   // Populate form if editing existing product
   useEffect(() => {
@@ -39,9 +42,19 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
         inStock: product.inStock ?? true,
         displayOrder: product.displayOrder || 999,
         badge: product.badge || '',  // Load existing badge
+        images: product.images || [],  // Load existing images array
+        detailContent: product.detailContent || '',  // Load rich text content
       });
     }
   }, [product]);
+
+  // Handle image upload completion
+  useEffect(() => {
+    if (uploadingImage.url && uploadingImage.thumbnailUrl) {
+      handleAddImage(uploadingImage.url, uploadingImage.thumbnailUrl);
+      setUploadingImage({ url: '', thumbnailUrl: '' }); // Reset
+    }
+  }, [uploadingImage]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -53,6 +66,94 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
     // Clear error for this field
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  // Multi-image management functions
+  const handleAddImage = useCallback((url, thumbnailUrl) => {
+    setFormData(prev => {
+      if (prev.images.length >= 6) {
+        alert('最多只能上傳 6 張圖片');
+        return prev;
+      }
+
+      const newImage = {
+        url,
+        thumbnailUrl: thumbnailUrl || null,
+        displayOrder: prev.images.length,
+        alt: `${prev.name || '商品'} 圖片 ${prev.images.length + 1}`
+      };
+
+      const newImages = [...prev.images, newImage];
+      const updatedData = {
+        ...prev,
+        images: newImages
+      };
+
+      // Update main image if this is the first image
+      if (prev.images.length === 0) {
+        updatedData.imageUrl = url;
+        updatedData.thumbnailUrl = thumbnailUrl || null;
+      }
+
+      return updatedData;
+    });
+  }, []);
+
+  const handleRemoveImage = (index) => {
+    const newImages = formData.images.filter((_, i) => i !== index);
+    // Re-index displayOrder
+    const reindexedImages = newImages.map((img, i) => ({
+      ...img,
+      displayOrder: i
+    }));
+
+    setFormData(prev => ({
+      ...prev,
+      images: reindexedImages
+    }));
+
+    // Update main image if first image was removed
+    if (index === 0 && reindexedImages.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        imageUrl: reindexedImages[0].url,
+        thumbnailUrl: reindexedImages[0].thumbnailUrl || null
+      }));
+    } else if (reindexedImages.length === 0) {
+      setFormData(prev => ({
+        ...prev,
+        imageUrl: '',
+        thumbnailUrl: ''
+      }));
+    }
+  };
+
+  const handleMoveImage = (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= formData.images.length) return;
+
+    const newImages = [...formData.images];
+    const [movedImage] = newImages.splice(fromIndex, 1);
+    newImages.splice(toIndex, 0, movedImage);
+
+    // Re-index displayOrder
+    const reindexedImages = newImages.map((img, i) => ({
+      ...img,
+      displayOrder: i
+    }));
+
+    setFormData(prev => ({
+      ...prev,
+      images: reindexedImages
+    }));
+
+    // Update main image if first image changed
+    if (fromIndex === 0 || toIndex === 0) {
+      setFormData(prev => ({
+        ...prev,
+        imageUrl: reindexedImages[0].url,
+        thumbnailUrl: reindexedImages[0].thumbnailUrl || null
+      }));
     }
   };
 
@@ -75,8 +176,8 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
       newErrors.price = 'Price must be greater than 0';
     }
 
-    if (!formData.imageUrl.trim()) {
-      newErrors.imageUrl = 'Image URL is required';
+    if (!formData.images || formData.images.length === 0) {
+      newErrors.imageUrl = '請至少上傳一張商品圖片';
     }
 
     setErrors(newErrors);
@@ -254,24 +355,105 @@ function ProductForm({ product, categories, onSubmit, onCancel }) {
           </span>
         </div>
 
-        <ImageUpload
-          label="商品圖片 *"
-          value={formData.imageUrl}
-          onChange={(url) => {
-            setFormData((prev) => ({ ...prev, imageUrl: url }));
-            if (errors.imageUrl) {
-              setErrors((prev) => ({ ...prev, imageUrl: null }));
-            }
-          }}
-          onThumbnailChange={(thumbUrl) => {
-            setFormData((prev) => ({ ...prev, thumbnailUrl: thumbUrl }));
-          }}
-          placeholder="上傳商品圖片 (縮圖將自動生成)"
-        />
-        {errors.imageUrl && <span className={styles.fieldError}>{errors.imageUrl}</span>}
-        {formData.thumbnailUrl && (
-          <p className={styles.helpText}>✓ 縮圖已自動生成</p>
-        )}
+        {/* Multi-Image Management Section */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            商品圖片 * (最多 6 張)
+          </label>
+
+          <div className={styles.imagesContainer}>
+            {/* Existing Images Display */}
+            {formData.images.length > 0 && (
+              <div className={styles.imagesGrid}>
+                {formData.images.map((image, index) => (
+                  <div key={index} className={styles.imageItem}>
+                    <img
+                      src={image.thumbnailUrl || image.url}
+                      alt={image.alt || `圖片 ${index + 1}`}
+                      className={styles.imagePreview}
+                    />
+                    <div className={styles.imageOverlay}>
+                      <span className={styles.imageIndex}>
+                        {index === 0 ? '主圖' : `${index + 1}`}
+                      </span>
+                    </div>
+                    <div className={styles.imageActions}>
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => handleMoveImage(index, index - 1)}
+                          className={styles.iconButton}
+                          title="往前移"
+                        >
+                          ←
+                        </button>
+                      )}
+                      {index < formData.images.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleMoveImage(index, index + 1)}
+                          className={styles.iconButton}
+                          title="往後移"
+                        >
+                          →
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className={styles.deleteButton}
+                        title="刪除"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Add New Image Card - Inside Grid */}
+                {formData.images.length < 6 && (
+                  <div className={styles.uploadCard}>
+                    <ImageUpload
+                      key={formData.images.length}
+                      label=""
+                      value=""
+                      onChange={(url) => {
+                        setUploadingImage(prev => ({ ...prev, url }));
+                      }}
+                      onThumbnailChange={(thumbUrl) => {
+                        setUploadingImage(prev => ({ ...prev, thumbnailUrl: thumbUrl }));
+                      }}
+                      placeholder={`➕ 新增\n第 ${formData.images.length + 1} 張圖片`}
+                      hideUrlInput={true}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Show upload area when no images */}
+            {formData.images.length === 0 && (
+              <ImageUpload
+                label="上傳第一張圖片（主圖）"
+                value=""
+                onChange={(url) => {
+                  setUploadingImage(prev => ({ ...prev, url }));
+                }}
+                onThumbnailChange={(thumbUrl) => {
+                  setUploadingImage(prev => ({ ...prev, thumbnailUrl: thumbUrl }));
+                }}
+                placeholder="點擊上傳圖片 (縮圖將自動生成)"
+                hideUrlInput={true}
+              />
+            )}
+          </div>
+
+          {errors.imageUrl && <span className={styles.fieldError}>{errors.imageUrl}</span>}
+
+          <p className={styles.helpText}>
+            ℹ️ 第一張圖片將作為主圖顯示在商品列表中。可上傳最多 6 張圖片。
+          </p>
+        </div>
 
         <div className={styles.formGroup}>
           <label className={styles.checkboxLabel}>
