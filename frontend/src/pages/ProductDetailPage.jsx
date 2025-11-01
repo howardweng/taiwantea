@@ -10,7 +10,7 @@ import DOMPurify from 'dompurify';
 import ImageGallery from '../components/customer/ImageGallery';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Navigation from '../components/layout/Navigation';
-import api from '../services/api';
+import { getCategories } from '../services/productService';
 import styles from './ProductDetailPage.module.css';
 
 function ProductDetailPage() {
@@ -28,8 +28,8 @@ function ProductDetailPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/api/categories');
-      setCategories(response.data || []);
+      const categoriesData = await getCategories();
+      setCategories(categoriesData || []);
     } catch (err) {
       console.error('Error fetching categories:', err);
       setCategories([]);
